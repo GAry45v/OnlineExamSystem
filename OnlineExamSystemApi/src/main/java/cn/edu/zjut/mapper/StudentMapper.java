@@ -1,11 +1,12 @@
 package cn.edu.zjut.mapper;
 
 import cn.edu.zjut.entity.Student;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
-
+@Mapper
 public interface StudentMapper {
 
     // 按学号或姓名查找学生

@@ -1,4 +1,4 @@
-package cn.edu.zjut.service.impl;
+package cn.edu.zjut.serviceimpl;
 
 import cn.edu.zjut.entity.StudentTeachingClass;
 import cn.edu.zjut.mapper.StudentTeachingClassMapper;
@@ -6,7 +6,7 @@ import cn.edu.zjut.service.StudentTeachingClassService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
+import java.sql.Timestamp;  // 确保导入的是 java.sql.Timestamp
 import java.util.List;
 
 @Service

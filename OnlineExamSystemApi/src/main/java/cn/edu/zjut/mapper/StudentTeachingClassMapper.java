@@ -2,11 +2,12 @@ package cn.edu.zjut.mapper;
 
 import cn.edu.zjut.entity.StudentTeachingClass;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 import java.util.List;
-
+@Mapper
 public interface StudentTeachingClassMapper {
 
     // 向学生教学班关联表添加学生
