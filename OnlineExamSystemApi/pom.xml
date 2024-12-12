@@ -2,17 +2,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.1.2.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
     <groupId>com.edu.zjut</groupId>
     <artifactId>OnlineExamSystemApi</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>OnlineExamSystemApi</name>
-    <description>online exam system project for Spring Boot</description>
+    <description>Online exam system project for Spring Boot</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -25,7 +27,13 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- MyBatis-Plus -->
+        <!-- Spring Boot MongoDB Support -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
+
+        <!-- MyBatis-Plus for ORM support -->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
@@ -42,6 +50,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.33</version> <!-- 最新版本 -->
             <scope>runtime</scope>
         </dependency>
 
@@ -52,26 +61,34 @@
             <version>1.1.8</version>
         </dependency>
 
-        <!-- Spring Boot Test Starter -->
+        <!-- Spring Boot Test Starter for Unit Tests -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
 
-        <!-- Spring Boot DevTools (Hot Reload) -->
+        <!-- Spring Boot DevTools for Hot Reload -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
-            <optional>true</optional> <!-- Enables hot reload -->
+            <optional>true</optional>
         </dependency>
 
-        <!-- Spring Transaction Management -->
+        <!-- JUnit 5 for Unit Testing -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-tx</artifactId>
-            <version>4.3.9.RELEASE</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.7.1</version>
+            <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.7.1</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <repositories>

@@ -4,30 +4,21 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public class Questions {
 
-    private Integer questionId;
-    private Integer questionBankId;
-    private String content;
-    private JsonNode options;         // 用于存储选项的JSON格式数据
-    private JsonNode correctAnswers;  // 用于存储正确答案的JSON格式数据
-    private Integer difficulty;
-    private String tags;
-    private Integer teacherId;
+    private String questionId; // 使用 MongoDB 默认 ID 类型
+    private String content; // 题目内容
+    private JsonNode options; // 选项 JSON
+    private JsonNode correctAnswers; // 正确答案 JSON
+    private Integer difficulty; // 难度
+    private String tags; // 标签
+    private Integer teacherId; // 教师 ID
 
     // Getters and Setters
-    public Integer getQuestionId() {
+    public String getQuestionId() {
         return questionId;
     }
 
-    public void setQuestionId(Integer questionId) {
+    public void setQuestionId(String questionId) {
         this.questionId = questionId;
-    }
-
-    public Integer getQuestionBankId() {
-        return questionBankId;
-    }
-
-    public void setQuestionBankId(Integer questionBankId) {
-        this.questionBankId = questionBankId;
     }
 
     public String getContent() {
@@ -76,5 +67,9 @@ public class Questions {
 
     public void setTeacherId(Integer teacherId) {
         this.teacherId = teacherId;
+    }
+
+    public void setQuestionBankId(int i) {
+
     }
 }
