@@ -6,4 +6,6 @@ public interface UserService {
     // 用户注册
     void registerUser(User user);
     void bindUserInfo(User user,String schoolname);
+
+    String login(User user);
 }

@@ -3,10 +3,14 @@ package cn.edu.zjut.serviceimpl;
 import cn.edu.zjut.entity.User;
 import cn.edu.zjut.mapper.UserMapper;
 import cn.edu.zjut.service.UserService;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -54,6 +58,40 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new RuntimeException("User number does not match school ID");
         }
+    }
+
+    public String login(User user) {
+        // 查询数据库，验证用户名和密码是否匹配
+        User dbUser = userMapper.getUserByUserNumber(user.getUserNumber());
+        if (dbUser == null || !passwordEncoder.matches(user.getPassword(), dbUser.getPassword())) {
+            throw new RuntimeException("Invalid username or password");
+        }
+
+        // 生成 JWT Token
+        String token = generateToken(dbUser);
+
+        return token;
+    }
+
+    // 生成 JWT Token
+    private String generateToken(User user) {
+        long expirationTime = 1000 * 60 * 60 * 24; // 24小时有效期
+
+        // 获取当前时间
+        Date now = new Date();
+        Date expirationDate = new Date(now.getTime() + expirationTime);
+
+        // 设置 JWT 的签发者、主题、用户信息、过期时间等
+        String token = Jwts.builder()
+                .setSubject(user.getUserNumber()) // 设置主题为用户名
+                .claim("userId", user.getUserId()) // 设置用户ID
+                .claim("roleId", user.getRoleId()) // 设置角色ID
+                .setIssuedAt(now) // 设置签发时间
+                .setExpiration(expirationDate) // 设置过期时间
+                .signWith(SignatureAlgorithm.HS512, "exam") // 签名使用密钥
+                .compact();
+
+        return token;
     }
 
 }

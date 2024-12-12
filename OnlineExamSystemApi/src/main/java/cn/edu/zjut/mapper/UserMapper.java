@@ -25,4 +25,9 @@ public interface UserMapper {
     // 更新用户信息
     @Update("UPDATE User SET schoolId = #{schoolId}, userNumber = #{userNumber}, roleId = #{roleId} WHERE userId = #{userId}")
     void bindUserInfo(User user);
+
+        // 根据用户的 userNumber 查询用户信息
+    @Select("SELECT * FROM User WHERE userNumber = #{userNumber}")
+    User getUserByUserNumber(String userNumber);
+
 }

@@ -5,6 +5,10 @@ import cn.edu.zjut.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import cn.edu.zjut.vo.ResponseResult;
+
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -54,9 +58,21 @@ public class UserController {
         }
     }
 
-//    @PostMapping("/login")
-//    public ResponseResult LoginUser(@RequestBody User user) {
-//        userService.bindUserInfo(user);
-//        return "绑定成功";
-//    }
+    @PostMapping("/login")
+    public ResponseResult<Map<String, String>> login(@RequestBody User user) {
+        try {
+            // 调用 Service 层的登录方法
+            String token = userService.login(user);
+
+            // 返回 token 给前端
+            Map<String, String> response = new HashMap<>();
+            response.put("token", token);
+
+            return ResponseResult.success("Login successful", response);
+        } catch (RuntimeException e) {
+            return ResponseResult.error(e.getMessage());
+        } catch (Exception e) {
+            return ResponseResult.error("Login failed: " + e.getMessage());
+        }
+    }
 }
