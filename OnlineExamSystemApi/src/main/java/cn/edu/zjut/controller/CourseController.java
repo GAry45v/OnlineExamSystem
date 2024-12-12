@@ -3,60 +3,40 @@ package cn.edu.zjut.controller;
 import cn.edu.zjut.entity.Course;
 import cn.edu.zjut.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/course")
+@RequestMapping("/course")
 public class CourseController {
 
     @Autowired
     private CourseService courseService;
 
-    // 获取当前教师ID（假设已通过认证获取教师信息）
-    @GetMapping("/teacher/id")
-    public ResponseEntity<?> getTeacherId() {
-        // 假设获取当前教师的ID，可以通过JWT或Session获取
-        Long teacherId = 1L;  // 临时使用1L模拟
-        return ResponseEntity.ok(new TeacherResponse(teacherId));
-    }
-
     // 教师创建课程
     @PostMapping("/create")
-    public ResponseEntity<?> createCourse(@RequestBody Course course) {
+    public String createCourse(@RequestBody Course course) {
+        // 假设教师的ID是通过Session或Token等方式获取到的，这里使用一个固定的教师ID作为示例
+        Integer teacherId = 1; // 这里需要获取当前登录的教师ID
+
+        course.setCreatedByTeacherId(teacherId); // 设置创建课程的教师ID
+
+        // 调用Service层来保存课程
         courseService.createCourse(course);
-        return ResponseEntity.ok(new CourseResponse((long) course.getCourseId()));
-    }
-}
 
-class TeacherResponse {
-    private Long teacherId;
-
-    public TeacherResponse(Long teacherId) {
-        this.teacherId = teacherId;
+        return "课程创建成功";
     }
 
-    public Long getTeacherId() {
-        return teacherId;
+    // 教师删除课程
+    @DeleteMapping("/delete/{courseId}")
+    public String deleteCourse(@PathVariable Integer courseId) {
+        courseService.deleteCourse(courseId);
+        return "课程删除成功";
     }
-
-    public void setTeacherId(Long teacherId) {
-        this.teacherId = teacherId;
-    }
-}
-
-class CourseResponse {
-    private Long courseId;
-
-    public CourseResponse(Long courseId) {
-        this.courseId = courseId;
-    }
-
-    public Long getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(Long courseId) {
-        this.courseId = courseId;
+    // 查询某个教师所创建的所有课程
+    @GetMapping("/teacher/{teacherId}")
+    public List<Course> getCoursesByTeacherId(@PathVariable Integer teacherId) {
+        return courseService.getCoursesByTeacherId(teacherId);
     }
 }

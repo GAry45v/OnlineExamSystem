@@ -29,4 +29,8 @@ public class TeachingClass {
     public void setClassName(String className) {
         this.className = className;
     }
+
+
+    public void setCreatedByTeacherId(Integer teacherId) {
+    }
 }
