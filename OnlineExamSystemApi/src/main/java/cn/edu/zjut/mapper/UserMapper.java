@@ -7,9 +7,9 @@ import org.apache.ibatis.annotations.Update;
 @Mapper
 public interface UserMapper {
 
-    @Insert("INSERT INTO User (phoneNumber, password, schoolId, userNumber, roleId) " +
-            "VALUES (#{phoneNumber}, #{password}, #{schoolId}, #{userNumber}, #{roleId})")
+    @Insert("INSERT INTO User (phoneNumber, password) VALUES (#{phoneNumber}, #{password})")
     void registerUser(User user);
+
     @Update("UPDATE User SET schoolId = #{schoolId}, userNumber = #{userNumber}, roleId = #{roleId} WHERE userId = #{userId}")
     void bindUserInfo(User user);
 }
