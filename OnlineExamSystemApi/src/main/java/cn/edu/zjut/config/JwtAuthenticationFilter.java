@@ -22,12 +22,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String uri = request.getRequestURI();
-        System.out.println("Request URI: " + uri);  // Log the URI
-        if (uri.equals("/api/user/login") || uri.equals("/api/user/register")) {
-            filterChain.doFilter(request, response);  // Proceed without filtering JWT
-            return;
-        }
+        String requestURI = request.getRequestURI();
+        logger.debug("Request URI: {}"+requestURI);
 
         String token = request.getHeader("Authorization");
 
@@ -36,7 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             try {
                 Jws<Claims> claimsJws = Jwts.parser()
-                        .setSigningKey("your-secret-key")  // 密钥
+                        .setSigningKey("javaxcryptospecSecretKeySpecfa779f14javaxcryptospecSecretKeySpecfa779f14javaxcryptospecSecretKeySpecfa779f14")  // 密钥
                         .parseClaimsJws(token);
 
                 Claims claims = claimsJws.getBody();

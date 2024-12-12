@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
                 .claim("roleId", user.getRoleId()) // 设置角色ID
                 .setIssuedAt(now) // 设置签发时间
                 .setExpiration(expirationDate) // 设置过期时间
-                .signWith(SignatureAlgorithm.HS512, "exam") // 签名使用密钥
+                .signWith(SignatureAlgorithm.HS512, "javaxcryptospecSecretKeySpecfa779f14javaxcryptospecSecretKeySpecfa779f14javaxcryptospecSecretKeySpecfa779f14") // 签名使用密钥
                 .compact();
 
         return token;

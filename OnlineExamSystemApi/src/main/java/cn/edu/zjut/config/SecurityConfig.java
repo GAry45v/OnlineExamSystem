@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -19,21 +20,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         http
+                .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/user/login", "/api/user/register").permitAll()  // 登录和注册接口可以不验证
+                .antMatchers("/api/user/login", "/api/user/register").permitAll()  // 登录和注册无需认证
                 .anyRequest().authenticated()  // 其他请求需要认证
                 .and()
-                .exceptionHandling()
-                .authenticationEntryPoint((request, response, authException) -> {
-                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");  // 未认证的请求返回 401
-                });
-//        http
-//                .authorizeRequests()
-//                .antMatchers("/api/user/login", "/api/user/register").permitAll()  // 登录和注册无需认证
-//                .anyRequest().authenticated()  // 其他请求需要认证
-//                .and();
-//                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);  // 在用户名密码过滤器之后添加 JWT 过滤器
+                .addFilterBefore(jwtAuthenticationFilter, FilterSecurityInterceptor.class);  // 在用户名密码过滤器之后添加 JWT 过滤器
     }
 }
 
