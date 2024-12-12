@@ -73,7 +73,7 @@ export default {
                 return;
             }
             this.$axios({
-                url: `/api/login`,
+                url: `/api/user/login`,
                 method: "post",
                 data: {
                     ...this.formLabelAlign,
@@ -188,7 +188,7 @@ a:link {
     width: 100%;
     overflow-y: auto;
     height: 100%;
-    background: url("../../assets/img/loginbg.png") center top / cover no-repeat;
+    background: url("../../assets/img/login.jpg") center top / cover no-repeat;
     background-color: #b6bccdd1 !important;
 }
 
