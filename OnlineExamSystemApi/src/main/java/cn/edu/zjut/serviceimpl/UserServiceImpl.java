@@ -30,8 +30,30 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Override
-    public void bindUserInfo(User user) {
-        userMapper.bindUserInfo(user);
+    public void bindUserInfo(User user,String schoolname) {
+        // 查询学校 ID 是否存在
+        Integer schoolId = userMapper.searchSchoolIdByName(schoolname);
+        if (schoolId == null) {
+            throw new RuntimeException("School does not exist");
+        }
+
+        // 根据角色选择查询 Teacher 或 Student 表
+        boolean exists = false;
+        if (user.getRoleId() == 1) { // 教师角色
+            exists = userMapper.checkTeacherExist(user.getUserNumber(), schoolId);
+        } else if (user.getRoleId() == 2) { // 学生角色
+            exists = userMapper.checkStudentExist(user.getUserNumber(), schoolId);
+        } else {
+            throw new RuntimeException("Invalid role");
+        }
+
+        // 如果对应角色的信息存在，更新 User 表
+        if (exists) {
+            user.setSchoolId(schoolId);
+            userMapper.bindUserInfo(user);
+        } else {
+            throw new RuntimeException("User number does not match school ID");
+        }
     }
+
 }
