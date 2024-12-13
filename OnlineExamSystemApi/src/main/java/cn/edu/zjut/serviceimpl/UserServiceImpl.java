@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
 
     public String login(User user) {
         // 查询数据库，验证用户名和密码是否匹配
-        User dbUser = userMapper.getUserByUserNumber(user.getUserNumber());
+        User dbUser = userMapper.getUserByphonenumber(user.getPhoneNumber());
         if (dbUser == null || !passwordEncoder.matches(user.getPassword(), dbUser.getPassword())) {
             throw new RuntimeException("Invalid username or password");
         }
@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
         // 生成 JWT Token
         String token = generateToken(dbUser);
 
-        return token;
+        return token+dbUser.getRoleId();
     }
 
     // 生成 JWT Token
