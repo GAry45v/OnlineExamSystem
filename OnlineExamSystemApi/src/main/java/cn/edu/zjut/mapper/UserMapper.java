@@ -27,7 +27,7 @@ public interface UserMapper {
     void bindUserInfo(User user);
 
         // 根据用户的 userNumber 查询用户信息
-    @Select("SELECT * FROM User WHERE userNumber = #{phonenumber}")
+    @Select("SELECT * FROM User WHERE phoneNumber = #{phonenumber}")
     User getUserByphonenumber(String phonenumber);
 
 }

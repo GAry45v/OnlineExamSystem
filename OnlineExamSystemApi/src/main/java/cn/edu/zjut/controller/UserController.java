@@ -2,6 +2,7 @@ package cn.edu.zjut.controller;
 
 import cn.edu.zjut.entity.User;
 import cn.edu.zjut.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import cn.edu.zjut.vo.ResponseResult;
@@ -15,7 +16,7 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
+    private ObjectMapper objectMapper=new ObjectMapper();
     // 用户注册接口
     @PostMapping("/register")
     public ResponseResult<User> registerUser(@RequestBody User user) {
@@ -38,7 +39,10 @@ public class UserController {
     }
 
     @PostMapping("/bind")
-    public ResponseResult<User> bindUserInfo(User user,String schoolname) {
+    public ResponseResult<User> bindUserInfo(@RequestBody Map<String, Object> requestData) {
+
+        User user = objectMapper.convertValue(requestData.get("user"), User.class);
+        String schoolname =(String)requestData.get("schoolname");
         try {
             // 调用 Service 层的绑定方法
             userService.bindUserInfo(user,schoolname);
@@ -62,12 +66,12 @@ public class UserController {
     public ResponseResult<Map<String, String>> login(@RequestBody User user) {
         try {
             // 调用 Service 层的登录方法
-            String token = userService.login(user);
+            String result = userService.login(user);
 
             // 返回 token 给前端
             Map<String, String> response = new HashMap<>();
-            response.put("token", token);
-
+            response.put("roleId", result.substring(result.length() - 1));
+            response.put("token",result.substring(0, result.length() - 1));
             return ResponseResult.success("Login successful", response);
         } catch (RuntimeException e) {
             return ResponseResult.error(e.getMessage());

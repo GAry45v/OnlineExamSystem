@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
         // 生成 JWT Token
         String token = generateToken(dbUser);
 
-        return token;
+        return token+dbUser.getRoleId();
     }
 
     // 生成 JWT Token
