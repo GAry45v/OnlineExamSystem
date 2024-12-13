@@ -23,6 +23,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         logger.info("JwtAuthenticationFilter started...");
 
+        String requestURI = request.getRequestURI();
+        if ("/api/user/login".equals(requestURI) || "/api/user/register".equals(requestURI)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String token = request.getHeader("Authorization");
 
         // 如果 token 为空，返回相应的消息

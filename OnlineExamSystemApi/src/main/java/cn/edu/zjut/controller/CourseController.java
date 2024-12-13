@@ -17,7 +17,7 @@ public class CourseController {
     // 教师创建课程
     @PostMapping("/create")
     public String createCourse(@RequestBody Course course) {
-        // 假设教师的ID是通过Session或Token等方式获取到的，这里使用一个固定的教师ID作为示例
+
         Integer teacherId = 1; // 这里需要获取当前登录的教师ID
 
         course.setCreatedByTeacherId(teacherId); // 设置创建课程的教师ID
