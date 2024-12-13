@@ -49,13 +49,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     .parseClaimsJws(token);
 
             Claims claims = claimsJws.getBody();
-            String userNumber = claims.getSubject();
+            String Subject = claims.getSubject();
             Integer userId = (Integer) claims.get("userId");
             Integer roleId = (Integer) claims.get("roleId");
-
+            String  userNumber=(String) claims.get("userNumber");
             logger.info("JWT parsed successfully: userId=" + userId + ", roleId=" + roleId+",userNumber="+userNumber);
 
-            JwtAuthenticationToken authentication = new JwtAuthenticationToken(userNumber, null, userId, roleId);
+            JwtAuthenticationToken authentication = new JwtAuthenticationToken(Subject, null, userId, roleId,userNumber);
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
         } catch (JwtException e) {

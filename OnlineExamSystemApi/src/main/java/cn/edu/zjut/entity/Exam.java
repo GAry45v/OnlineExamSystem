@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 public class Exam {
     private int examId;
     private String examName;
-    private int createdByTeacherId;
+    private String createdByEmployeeNumber;
     private Timestamp startTime;
     private int durationMinutes;
     private boolean isAntiCheatingEnabled;
@@ -29,12 +29,12 @@ public class Exam {
         this.examName = examName;
     }
 
-    public int getCreatedByTeacherId() {
-        return createdByTeacherId;
+    public String getCreatedByEmployeeNumber() {
+        return createdByEmployeeNumber;
     }
 
-    public void setCreatedByTeacherId(int createdByTeacherId) {
-        this.createdByTeacherId = createdByTeacherId;
+    public void setCreatedByEmployeeNumber(String createdByEmployeeNumber) {
+        this.createdByEmployeeNumber = createdByEmployeeNumber;
     }
 
     public Timestamp getStartTime() {

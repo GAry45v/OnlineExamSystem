@@ -24,7 +24,7 @@ public class CourseServiceImpl implements CourseService {
         courseMapper.deleteCourse(courseId);  // 调用Mapper层的删除方法
     }
     @Override
-    public List<Course> getCoursesByemployeeNumber(String employeeNumber) {
-        return courseMapper.findCoursesByTeacherId(employeeNumber);
+    public List<Course> getCoursesByEmployeeNumber(String employeeNumber) {
+        return courseMapper.findCoursesByEmployeeNumber(employeeNumber);
     }
 }

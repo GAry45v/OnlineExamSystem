@@ -9,12 +9,17 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
     private final Integer userId;
     private final Integer roleId;
 
-    public JwtAuthenticationToken(Object principal, Object credentials, Integer userId, Integer roleId) {
+
+
+    private final String userNumber;
+
+    public JwtAuthenticationToken(Object principal, Object credentials, Integer userId, Integer roleId,String userNumber) {
         super(null);
         this.principal = principal;
         this.credentials = credentials;
         this.userId = userId;
         this.roleId = roleId;
+        this.userNumber=userNumber;
         setAuthenticated(true);
     }
 
@@ -35,5 +40,9 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
     public Integer getRoleId() {
         return this.roleId;
     }
+
+    public String getUserNumber() {return userNumber;}
+
+
 }
 

@@ -3,7 +3,7 @@ package cn.edu.zjut.entity;
 public class StudentExam {
     private int studentExamId;
     private int examId;
-    private int studentId;
+    private String studentNumber;
     private String status;
     private double score;
 
@@ -24,12 +24,12 @@ public class StudentExam {
         this.examId = examId;
     }
 
-    public int getStudentId() {
-        return studentId;
+    public String getStudentNumber() {
+        return studentNumber;
     }
 
-    public void setStudentId(int studentId) {
-        this.studentId = studentId;
+    public void setStudentNumber(String studentNumber) {
+        this.studentNumber = studentNumber;
     }
 
     public String getStatus() {

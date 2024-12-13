@@ -10,7 +10,7 @@ public class Questions {
     private JsonNode correctAnswers; // 正确答案 JSON
     private Integer difficulty; // 难度
     private String tags; // 标签
-    private Integer teacherId; // 教师 ID
+    private String employeeNumber; // 教师 ID
 
     // Getters and Setters
     public String getQuestionId() {
@@ -61,12 +61,12 @@ public class Questions {
         this.tags = tags;
     }
 
-    public Integer getTeacherId() {
-        return teacherId;
+    public String getEmployeeNumber() {
+        return employeeNumber;
     }
 
-    public void setTeacherId(Integer teacherId) {
-        this.teacherId = teacherId;
+    public void setEmployeeNumber(String employeeNumber) {
+        this.employeeNumber = employeeNumber;
     }
 
     public void setQuestionBankId(int i) {

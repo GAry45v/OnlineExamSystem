@@ -9,8 +9,8 @@ import java.util.List;
 public interface CourseMapper {
 
     // 教师创建课程
-    @Insert("INSERT INTO Course(courseName, semester, createdByTeacherId) " +
-            "VALUES(#{course.courseName}, #{course.semester}, #{course.createdByTeacherId})")
+    @Insert("INSERT INTO Course(courseName, semester, createdByEmployeeNumber) " +
+            "VALUES(#{course.courseName}, #{course.semester}, #{course.createdByEmployeeNumber})")
     void createCourse(@Param("course") Course course);
 
     // 教师删除课程
@@ -18,6 +18,6 @@ public interface CourseMapper {
     void deleteCourse(@Param("courseId") Integer courseId);
 
     // 查询某个教师所创建的所有课程
-    @Select("SELECT * FROM Course WHERE createdByTeacherId = #{employeeNumber}")
-    List<Course> findCoursesByTeacherId(@Param("employeeNumber") String employeeNumber);
+    @Select("SELECT * FROM Course WHERE createdByEmployeeNumber = #{employeeNumber}")
+    List<Course> findCoursesByEmployeeNumber(@Param("employeeNumber") String employeeNumber);
 }

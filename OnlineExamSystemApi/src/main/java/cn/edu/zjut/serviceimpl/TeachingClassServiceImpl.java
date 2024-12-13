@@ -16,13 +16,13 @@ public class TeachingClassServiceImpl implements TeachingClassService {
     private TeachingClassMapper teachingClassMapper;
 
     @Override
-    public void createTeachingClass(TeachingClass teachingClass, Integer teacherId, String role) {
+    public void createTeachingClass(TeachingClass teachingClass, String employeeNumber, String role) {
         // 创建教学班
         teachingClassMapper.createTeachingClass(teachingClass);
 
         // 关联教学班和教师
         TeacherTeachingClass teacherTeachingClass = new TeacherTeachingClass();
-        teacherTeachingClass.setTeacherId(teacherId);
+        teacherTeachingClass.setEmployeeNumber(employeeNumber);
         teacherTeachingClass.setTeachingClassId(teachingClass.getTeachingClassId());
         teacherTeachingClass.setRole(role);
         teachingClassMapper.createTeacherTeachingClass(teacherTeachingClass);
@@ -43,23 +43,23 @@ public class TeachingClassServiceImpl implements TeachingClassService {
     }
 
     @Override
-    public List<TeachingClass> findTeachingClassesByTeacherId(Integer teacherId) {
-        return teachingClassMapper.findByTeacherId(teacherId);
+    public List<TeachingClass> findTeachingClassesByEmployeeNumber(String employeeNumber) {
+        return teachingClassMapper.findByEmployeeNumber(employeeNumber);
     }
 
     @Override
-    public void associateTeachingClassWithTeacher(Integer teacherId, Integer teachingClassId, String role) {
+    public void associateTeachingClassWithTeacher(String employeeNumber, Integer teachingClassId, String role) {
         // 关联教师和教学班
         TeacherTeachingClass teacherTeachingClass = new TeacherTeachingClass();
-        teacherTeachingClass.setTeacherId(teacherId);
+        teacherTeachingClass.setEmployeeNumber(employeeNumber);
         teacherTeachingClass.setTeachingClassId(teachingClassId);
         teacherTeachingClass.setRole(role);
         teachingClassMapper.createTeacherTeachingClass(teacherTeachingClass);
     }
 
     @Override
-    public void disassociateTeachingClassWithTeacher(Integer teacherId, Integer teachingClassId) {
+    public void disassociateTeachingClassWithTeacher(String employeeNumber, Integer teachingClassId) {
         // 解除教师与教学班的关联
-        teachingClassMapper.deleteTeacherTeachingClass(teacherId, teachingClassId);
+        teachingClassMapper.deleteTeacherTeachingClass(employeeNumber, teachingClassId);
     }
 }

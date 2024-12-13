@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 public class StudentTeachingClass {
 
     private Integer studentTeachingClassId;
-    private Integer studentId;
+    private String studentNumber;
     private Integer teachingClassId;
     private Timestamp enrollmentDate;
 
@@ -18,12 +18,12 @@ public class StudentTeachingClass {
         this.studentTeachingClassId = studentTeachingClassId;
     }
 
-    public Integer getStudentId() {
-        return studentId;
+    public String getStudentNumber() {
+        return studentNumber;
     }
 
-    public void setStudentId(Integer studentId) {
-        this.studentId = studentId;
+    public void setStudentNumber(String studentNumber) {
+        this.studentNumber = studentNumber;
     }
 
     public Integer getTeachingClassId() {

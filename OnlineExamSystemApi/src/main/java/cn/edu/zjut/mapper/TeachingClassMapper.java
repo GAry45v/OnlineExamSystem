@@ -26,15 +26,15 @@ public interface TeachingClassMapper {
     // 查询某个教师的所有教学班
     @Select("SELECT t.* FROM TeachingClass t " +
             "JOIN TeacherTeachingClass tt ON t.teachingClassId = tt.teachingClassId " +
-            "WHERE tt.teacherId = #{teacherId}")
-    List<TeachingClass> findByTeacherId(@Param("teacherId") Integer teacherId);
+            "WHERE tt.employeeNumber = #{employeeNumber}")
+    List<TeachingClass> findByEmployeeNumber(@Param("employeeNumber") String employeeNumber);
 
     // 插入教师与教学班的关联
-    @Insert("INSERT INTO TeacherTeachingClass(teacherId, teachingClassId, role) " +
-            "VALUES(#{teacherTeachingClass.teacherId}, #{teacherTeachingClass.teachingClassId}, #{teacherTeachingClass.role})")
+    @Insert("INSERT INTO TeacherTeachingClass(employeeNumber, teachingClassId, role) " +
+            "VALUES(#{teacherTeachingClass.employeeNumber}, #{teacherTeachingClass.teachingClassId}, #{teacherTeachingClass.role})")
     void createTeacherTeachingClass(@Param("teacherTeachingClass") TeacherTeachingClass teacherTeachingClass);
 
     // 删除教师与教学班的关联
-    @Delete("DELETE FROM TeacherTeachingClass WHERE teachingClassId = #{teachingClassId} AND teacherId = #{teacherId}")
-    void deleteTeacherTeachingClass(@Param("teacherId") Integer teacherId, @Param("teachingClassId") Integer teachingClassId);
+    @Delete("DELETE FROM TeacherTeachingClass WHERE teachingClassId = #{teachingClassId} AND employeeNumber = #{employeeNumber}")
+    void deleteTeacherTeachingClass(@Param("employeeNumber") String employeeNumber, @Param("teachingClassId") Integer teachingClassId);
 }

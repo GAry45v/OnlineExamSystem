@@ -5,7 +5,7 @@ public class Papers {
     private String name;
     private String description;
     private int totalMarks;
-    private int teacherId;
+    private String employeeNumber;
 
     // Getters and Setters
     public int getPaperId() {
@@ -40,11 +40,11 @@ public class Papers {
         this.totalMarks = totalMarks;
     }
 
-    public int getTeacherId() {
-        return teacherId;
+    public String getEmployeeNumber() {
+        return employeeNumber;
     }
 
-    public void setTeacherId(int teacherId) {
-        this.teacherId = teacherId;
+    public void setEmployeeNumber(String employeeNumber) {
+        this.employeeNumber = employeeNumber;
     }
 }

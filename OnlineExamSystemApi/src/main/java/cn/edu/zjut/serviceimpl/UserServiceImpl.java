@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.Date;
 
 @Service
@@ -83,7 +82,7 @@ public class UserServiceImpl implements UserService {
 
         // 设置 JWT 的签发者、主题、用户信息、过期时间等
         String token = Jwts.builder()
-                .setSubject(user.getUserNumber()) // 设置主题为用户名
+                .setSubject("token") // 设置主题为用户名
                 .claim("userNumber", user.getUserNumber())
                 .claim("userId", user.getUserId()) // 设置用户ID
                 .claim("roleId", user.getRoleId()) // 设置角色ID

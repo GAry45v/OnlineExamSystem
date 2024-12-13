@@ -31,6 +31,6 @@ public class TeachingClass {
     }
 
 
-    public void setCreatedByTeacherId(Integer teacherId) {
+    public void setCreatedByEmployeeNumber(String employeeNumber) {
     }
 }

@@ -22,13 +22,11 @@ public class CourseController {
     public ResponseResult<Void> createCourse(@RequestBody Course course) {
         // 获取当前用户的认证信息
         JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        String employeeNumber = (String) authentication.getPrincipal();
+        String employeeNumber = authentication.getUserNumber();
         Integer userId = authentication.getUserId();
         Integer roleId = authentication.getRoleId();
-
         // 设置创建课程的教师ID
-        course.setCreatedByTeacherId(employeeNumber);
-
+        course.setCreatedByEmployeeNumber(employeeNumber);
         try {
             // 调用Service层来保存课程
             courseService.createCourse(course);
@@ -41,8 +39,9 @@ public class CourseController {
 
     // 教师删除课程
     @DeleteMapping("/teacher/delete_course/courseId")
-    public ResponseResult<Void> deleteCourse(@PathVariable Integer courseId) {
+    public ResponseResult<Void> deleteCourse(@RequestParam Integer courseId) {
         try {
+            System.out.println("123"+courseId);
             // 调用Service层删除课程
             courseService.deleteCourse(courseId);
             return ResponseResult.success("课程删除成功", null);
@@ -54,14 +53,14 @@ public class CourseController {
     // 查询某个教师所创建的所有课程
 
     @GetMapping("/teacher/search_course")
-    public ResponseResult<List<Course>> getCoursesByTeacherId() {
+    public ResponseResult<List<Course>> getCoursesByEmployeeNumber() {
         // 获取当前用户的认证信息
         JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        String employeeNumber = (String) authentication.getPrincipal();
+        String employeeNumber = authentication.getUserNumber();
 
         try {
             // 调用Service层获取课程列表
-            List<Course> courses = courseService.getCoursesByemployeeNumber(employeeNumber);
+            List<Course> courses = courseService.getCoursesByEmployeeNumber(employeeNumber);
             if (courses.isEmpty()) {
                 return ResponseResult.success("该教师未创建任何课程", courses);
             }

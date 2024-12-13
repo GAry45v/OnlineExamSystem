@@ -11,7 +11,7 @@ public class QuestionBank {
     @Id
     private String questionBankId; // 使用 MongoDB 的默认 ID 类型
     private String name;
-    private Integer teacherId;
+    private String employeeNumber;
     private List<Questions> questions; // 存储题目列表
 
     // Getters and Setters
@@ -31,12 +31,12 @@ public class QuestionBank {
         this.name = name;
     }
 
-    public Integer getTeacherId() {
-        return teacherId;
+    public String getEmployeeNumber() {
+        return employeeNumber;
     }
 
-    public void setTeacherId(Integer teacherId) {
-        this.teacherId = teacherId;
+    public void setEmployeeNumber(String employeeNumber) {
+        this.employeeNumber = employeeNumber;
     }
 
     public List<Questions> getQuestions() {

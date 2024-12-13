@@ -16,16 +16,16 @@ public class StudentTeachingClassServiceImpl implements StudentTeachingClassServ
     private StudentTeachingClassMapper studentTeachingClassMapper;
 
     @Override
-    public void addStudentToTeachingClass(Integer studentId, Integer teachingClassId) {
+    public void addStudentToTeachingClass(String studentNumber, Integer teachingClassId) {
         // 生成入学日期
         Timestamp enrollmentDate = new Timestamp(System.currentTimeMillis());
-        studentTeachingClassMapper.addStudentToTeachingClass(studentId, teachingClassId, enrollmentDate);
+        studentTeachingClassMapper.addStudentToTeachingClass(studentNumber, teachingClassId, enrollmentDate);
     }
 
     @Override
-    public void addStudentsToTeachingClass(List<Integer> studentIds, Integer teachingClassId) {
+    public void addStudentsToTeachingClass(List<String> studentNumbers, Integer teachingClassId) {
         // 生成入学日期
         Timestamp enrollmentDate = new Timestamp(System.currentTimeMillis());
-        studentTeachingClassMapper.addStudentsToTeachingClass(studentIds, teachingClassId, enrollmentDate);
+        studentTeachingClassMapper.addStudentsToTeachingClass(studentNumbers, teachingClassId, enrollmentDate);
     }
 }

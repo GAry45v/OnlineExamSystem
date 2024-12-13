@@ -8,7 +8,7 @@ import java.util.List;
 public interface TeachingClassService {
 
     // 创建教学班
-    void createTeachingClass(TeachingClass teachingClass, Integer teacherId, String role);
+    void createTeachingClass(TeachingClass teachingClass, String employeeNumber, String role);
 
     // 删除教学班
     void deleteTeachingClass(Integer teachingClassId);
@@ -17,11 +17,11 @@ public interface TeachingClassService {
     List<TeachingClass> findTeachingClassesByCourseId(Integer courseId);
 
     // 查询某个教师的所有教学班
-    List<TeachingClass> findTeachingClassesByTeacherId(Integer teacherId);
+    List<TeachingClass> findTeachingClassesByEmployeeNumber(String employeeNumber);
 
     // 关联教学班和教师
-    void associateTeachingClassWithTeacher(Integer teacherId, Integer teachingClassId, String role);
+    void associateTeachingClassWithTeacher(String employeeNumber, Integer teachingClassId, String role);
 
     // 解绑教师与教学班
-    void disassociateTeachingClassWithTeacher(Integer teacherId, Integer teachingClassId);
+    void disassociateTeachingClassWithTeacher(String employeeNumber, Integer teachingClassId);
 }

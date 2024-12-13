@@ -3,7 +3,7 @@ package cn.edu.zjut.entity;
 public class TeacherTeachingClass {
 
     private Integer id;  // 关联ID
-    private Integer teacherId;  // 教师ID
+    private String employeeNumber;  // 教师ID
     private Integer teachingClassId;  // 教学班ID
     private String role;  // 教师角色
 
@@ -16,12 +16,12 @@ public class TeacherTeachingClass {
         this.id = id;
     }
 
-    public Integer getTeacherId() {
-        return teacherId;
+    public String getEmployeeNumber() {
+        return employeeNumber;
     }
 
-    public void setTeacherId(Integer teacherId) {
-        this.teacherId = teacherId;
+    public void setEmployeeNumber(String employeeNumber) {
+        this.employeeNumber = employeeNumber;
     }
 
     public Integer getTeachingClassId() {

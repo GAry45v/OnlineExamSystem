@@ -7,7 +7,7 @@ public class StudentAnswerAndGrading {
     private int studentExamId;
     private int paperQuestionId;
     private String answerContent;
-    private int graderId;
+    private String graderEmployeeNumber;
     private double score;
     private Timestamp gradingTime;
     private String comments;
@@ -46,12 +46,12 @@ public class StudentAnswerAndGrading {
         this.answerContent = answerContent;
     }
 
-    public int getGraderId() {
-        return graderId;
+    public String getGraderEmployeeNumber() {
+        return graderEmployeeNumber;
     }
 
-    public void setGraderId(int graderId) {
-        this.graderId = graderId;
+    public void setGraderEmployeeNumber(String graderEmployeeNumber) {
+        this.graderEmployeeNumber = graderEmployeeNumber;
     }
 
     public double getScore() {
