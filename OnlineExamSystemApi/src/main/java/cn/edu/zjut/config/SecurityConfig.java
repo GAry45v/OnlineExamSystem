@@ -25,7 +25,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/user/login", "/api/user/register").permitAll()  // 登录和注册无需认证
-//                .anyRequest().authenticated()  // 其他请求需要认证
                 .and()
                 .addFilterBefore(jwtAuthenticationFilter, FilterSecurityInterceptor.class) .exceptionHandling();
     }
