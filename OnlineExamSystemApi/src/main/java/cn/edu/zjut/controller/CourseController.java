@@ -22,12 +22,12 @@ public class CourseController {
     public ResponseResult<Void> createCourse(@RequestBody Course course) {
         // 获取当前用户的认证信息
         JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        Integer teacherId = (Integer) authentication.getPrincipal();
+        String employeeNumber = (String) authentication.getPrincipal();
         Integer userId = authentication.getUserId();
         Integer roleId = authentication.getRoleId();
 
         // 设置创建课程的教师ID
-        course.setCreatedByTeacherId(teacherId);
+        course.setCreatedByTeacherId(employeeNumber);
 
         try {
             // 调用Service层来保存课程
@@ -40,7 +40,7 @@ public class CourseController {
     }
 
     // 教师删除课程
-    @DeleteMapping("/teacher/delete_course/{courseId}")
+    @DeleteMapping("/teacher/delete_course/courseId")
     public ResponseResult<Void> deleteCourse(@PathVariable Integer courseId) {
         try {
             // 调用Service层删除课程
@@ -57,11 +57,11 @@ public class CourseController {
     public ResponseResult<List<Course>> getCoursesByTeacherId() {
         // 获取当前用户的认证信息
         JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        Integer teacherId = (Integer) authentication.getPrincipal();
+        String employeeNumber = (String) authentication.getPrincipal();
 
         try {
             // 调用Service层获取课程列表
-            List<Course> courses = courseService.getCoursesByTeacherId(teacherId);
+            List<Course> courses = courseService.getCoursesByemployeeNumber(employeeNumber);
             if (courses.isEmpty()) {
                 return ResponseResult.success("该教师未创建任何课程", courses);
             }

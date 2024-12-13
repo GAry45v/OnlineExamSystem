@@ -4,7 +4,7 @@ public class Course {
     private int courseId;
     private String courseName;
     private String semester;
-    private int createdByTeacherId;
+    private String createdByemployeeNumber;
 
     // Getters and Setters
     public int getCourseId() {
@@ -31,11 +31,11 @@ public class Course {
         this.semester = semester;
     }
 
-    public int getCreatedByTeacherId() {
-        return createdByTeacherId;
+    public String getCreatedByTeacherId() {
+        return createdByemployeeNumber;
     }
 
-    public void setCreatedByTeacherId(int createdByTeacherId) {
-        this.createdByTeacherId = createdByTeacherId;
+    public void setCreatedByTeacherId(String createdByTeacherId) {
+        this.createdByemployeeNumber = createdByTeacherId;
     }
 }

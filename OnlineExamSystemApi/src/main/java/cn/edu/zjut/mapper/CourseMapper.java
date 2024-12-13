@@ -18,6 +18,6 @@ public interface CourseMapper {
     void deleteCourse(@Param("courseId") Integer courseId);
 
     // 查询某个教师所创建的所有课程
-    @Select("SELECT * FROM Course WHERE createdByTeacherId = #{teacherId}")
-    List<Course> findCoursesByTeacherId(@Param("teacherId") Integer teacherId);
+    @Select("SELECT * FROM Course WHERE createdByTeacherId = #{employeeNumber}")
+    List<Course> findCoursesByTeacherId(@Param("employeeNumber") String employeeNumber);
 }

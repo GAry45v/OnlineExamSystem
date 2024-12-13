@@ -11,5 +11,5 @@ public interface CourseService {
 
     // 教师删除课程
     void deleteCourse(Integer courseId);
-    List<Course> getCoursesByTeacherId(Integer teacherId);
+    List<Course> getCoursesByemployeeNumber(String employeeNumber);
 }
