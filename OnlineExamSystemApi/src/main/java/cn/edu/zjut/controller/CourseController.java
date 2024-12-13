@@ -1,8 +1,11 @@
 package cn.edu.zjut.controller;
 
+import cn.edu.zjut.config.JwtAuthenticationToken;
 import cn.edu.zjut.entity.Course;
 import cn.edu.zjut.service.CourseService;
+import cn.edu.zjut.vo.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,16 +19,24 @@ public class CourseController {
 
     // 教师创建课程
     @PostMapping("/create")
-    public String createCourse(@RequestBody Course course) {
+    public ResponseResult<Void> createCourse(@RequestBody Course course) {
+        // 获取当前用户的认证信息
+        JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Integer teacherId = (Integer) authentication.getPrincipal();
+        Integer userId = authentication.getUserId();
+        Integer roleId = authentication.getRoleId();
 
-        Integer teacherId = 1; // 这里需要获取当前登录的教师ID
+        // 设置创建课程的教师ID
+        course.setCreatedByTeacherId(teacherId);
 
-        course.setCreatedByTeacherId(teacherId); // 设置创建课程的教师ID
-
-        // 调用Service层来保存课程
-        courseService.createCourse(course);
-
-        return "课程创建成功";
+        try {
+            // 调用Service层来保存课程
+            courseService.createCourse(course);
+            return ResponseResult.success("课程创建成功", null);
+        } catch (Exception e) {
+            // 处理异常并返回错误信息
+            return ResponseResult.error("课程创建失败：" + e.getMessage());
+        }
     }
 
     // 教师删除课程

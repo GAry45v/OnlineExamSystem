@@ -53,7 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Integer userId = (Integer) claims.get("userId");
             Integer roleId = (Integer) claims.get("roleId");
 
-            logger.info("JWT parsed successfully: userId=" + userId + ", roleId=" + roleId);
+            logger.info("JWT parsed successfully: userId=" + userId + ", roleId=" + roleId+",userNumber="+userNumber);
 
             JwtAuthenticationToken authentication = new JwtAuthenticationToken(userNumber, null, userId, roleId);
             SecurityContextHolder.getContext().setAuthentication(authentication);
