@@ -6,7 +6,7 @@
         <el-row class="main-container">
             <el-col :lg="8" :xs="16" :md="10" :span="10">
                 <div class="top" style="color: black;font-size: 32px">
-                    <i class="iconfont icon-r-team title-icon"></i> 在线考试系统
+                    <i class="iconfont icon-r-team title-icon"></i> 类学习通的在线考试系统
                     <span class="title"> </span>
                 </div>
                 <br />
@@ -14,15 +14,19 @@
                     <div class="container">
                         <p class="title">账号登录</p>
                         <el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
-                            <el-form-item label="用户名">
-                                <el-input v-model.number="formLabelAlign.username" placeholder="请输入用户名"></el-input>
+                            <el-form-item label="手机号">
+                                <el-input v-model.number="formLabelAlign.phoneNumber" placeholder="请输入手机号"></el-input>
                             </el-form-item>
                             <el-form-item label="密码">
                                 <el-input v-model="formLabelAlign.password" placeholder="请输入密码"
                                     type="password"></el-input>
                             </el-form-item>
                             <div class="submit">
-                                <el-button type="primary" class="row-login" @click="login()"> 登录</el-button>
+                                <el-button type="primary" class="row-login" @click="login()">登录</el-button>
+                            </div>
+                            <div class="register-link">
+                                <span>还没有账号？</span>
+                                <router-link to="/register" class="register-text">立即注册</router-link>
                             </div>
                         </el-form>
                     </div>
@@ -46,7 +50,7 @@ export default {
             role: 2,
             labelPosition: "left",
             formLabelAlign: {
-                username: "",
+                phoneNumber: "",
                 password: "",
             },
         };
@@ -55,17 +59,14 @@ export default {
         //用户登录请求后台处理
         login() {
             if (
-                this.formLabelAlign.username == undefined ||
-                this.formLabelAlign.username == ""
+                this.formLabelAlign.phoneNumber == undefined ||
+                this.formLabelAlign.phoneNumber == ""
             ) {
-                this.$message("请输入用户名");
+                this.$message("请输入手机号");
                 return;
             }
-            if (
-                !/^\d+$/.test(this.formLabelAlign.username) ||
-                this.formLabelAlign.username.toString().length > 10
-            ) {
-                this.$message("用户名有误");
+            if (!/^1[3-9]\d{9}$/.test(this.formLabelAlign.phoneNumber)){
+                this.$message("手机号有误");
                 return;
             }
             if (this.formLabelAlign.password == "") {
@@ -107,7 +108,7 @@ export default {
                         this.$message({
                             showClose: true,
                             type: "error",
-                            message: "用户名或者密码错误",
+                            message: "手机号或者密码错误",
                         });
                     }
                 })
@@ -169,6 +170,26 @@ export default {
 .container .el-radio-group {
     margin: 30px 0px;
 }
+
+.register-link {
+  text-align: right;
+  margin-top: 10px;
+  padding-right: 10px;
+  span {
+    color: #606266;
+    font-size: 14px;
+  }
+}
+  
+  .register-text {
+    color: #409EFF;
+    margin-left: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    &:hover {
+      color: #66b1ff;
+    }
+  }
 
 a:link {
     color: #ff962a;
@@ -276,4 +297,6 @@ a:link {
 .bottom .options .register span:nth-child(1) {
     color: #8c8c8c;
 }
+
 </style>
+

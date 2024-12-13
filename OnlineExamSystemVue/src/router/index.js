@@ -15,6 +15,10 @@ let router = new Router({
       component: () => import('@/components/common/login')
     },
     {
+      path: '/register', //注册页面
+      component: () => import('@//components/common/register')
+    },
+    {
       path: '/index', //教师主页
       component: () => import('@/components/admin/index'),
       children: [
