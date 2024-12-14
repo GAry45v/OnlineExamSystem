@@ -114,7 +114,7 @@ public class TeachingClassController {
             JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
             String employeeNumber = authentication.getUserNumber();
             if(teachingClassService.isMainLecturer(employeeNumber,teachingClassId)){
-                teachingClassService.disassociateTeachingClassWithTeacher(employeeNumber, teachingClassId);
+                teachingClassService.disassociateTeachingClassWithTeacher(employeeNumberinput, teachingClassId);
                 return ResponseResult.success("教学班和教师解绑成功");
             }else {
                 return ResponseResult.error("没有权限解除绑定教学班");
