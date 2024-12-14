@@ -31,6 +31,14 @@ let router = new Router({
           component: () => import('@/components/common/hello')
         },
         {
+          path: '/createCourse', //创建课程
+          component: () => import('@/components/teacher/createCourse')
+        },
+        {
+          path: '/getCoursesByEmployeeNumber', //查询课程
+          component: () => import('@/components/teacher/getCoursesByEmployeeNumber')
+        },
+        {
           path:'/grade', //学生成绩
           component: () => import('@/components/charts/grade')
         },
