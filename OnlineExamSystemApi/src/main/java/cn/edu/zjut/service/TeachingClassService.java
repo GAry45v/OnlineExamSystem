@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface TeachingClassService {
 
+    public boolean isMainLecturer(String employeeNumber, Integer teachingClassId);
     // 创建教学班
     void createTeachingClass(TeachingClass teachingClass, String employeeNumber, String role);
 

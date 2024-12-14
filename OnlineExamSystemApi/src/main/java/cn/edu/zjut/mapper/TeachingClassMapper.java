@@ -53,4 +53,14 @@ public interface TeachingClassMapper {
     // 删除教师与教学班的关联
     @Delete("DELETE FROM TeacherTeachingClass WHERE teachingClassId = #{teachingClassId} AND employeeNumber = #{employeeNumber}")
     void deleteTeacherTeachingClass(@Param("employeeNumber") String employeeNumber, @Param("teachingClassId") Integer teachingClassId);
+
+    @Delete("DELETE FROM TeacherTeachingClass WHERE teachingClassId = #{teachingClassId} ")
+    void deleteTeacherTeachingClass_all(@Param("teachingClassId") Integer teachingClassId);
+    // 检测教师是否为某教学班的主讲
+    @Select("SELECT COUNT(*) FROM TeacherTeachingClass " +
+            "WHERE teachingClassId = #{teachingClassId} " +
+            "AND employeeNumber = #{employeeNumber} " +
+            "AND role = '主讲'")
+    int countMainLecturer(@Param("employeeNumber") String employeeNumber,
+                          @Param("teachingClassId") Integer teachingClassId);
 }

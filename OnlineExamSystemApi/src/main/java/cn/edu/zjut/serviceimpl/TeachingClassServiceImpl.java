@@ -18,6 +18,12 @@ public class TeachingClassServiceImpl implements TeachingClassService {
     private TeachingClassMapper teachingClassMapper;
 
     @Override
+    public boolean isMainLecturer(String employeeNumber, Integer teachingClassId) {
+        int count = teachingClassMapper.countMainLecturer(employeeNumber, teachingClassId);
+        return count > 0;
+    }
+
+    @Override
     public void createTeachingClass(TeachingClass teachingClass, String employeeNumber, String role) {
         // 创建教学班
         teachingClassMapper.createTeachingClass(teachingClass);
@@ -32,15 +38,8 @@ public class TeachingClassServiceImpl implements TeachingClassService {
 
     @Override
     public void deleteTeachingClass(Integer teachingClassId,String employeeNumber) {
-        List<TeachingClass> ownedClasses=teachingClassMapper.findByEmployeeNumber(employeeNumber);
-        boolean isOwned = ownedClasses.stream()
-                .anyMatch(classItem -> classItem.getTeachingClassId()==(teachingClassId));
-        if (!isOwned) {
-            throw new IllegalArgumentException("当前用户无权限删除该教学班，教学班ID: " + teachingClassId);
-        }
-
         // 删除教师与教学班的关联
-        teachingClassMapper.deleteTeacherTeachingClass(null, teachingClassId); // 删除所有关联的教师
+        teachingClassMapper.deleteTeacherTeachingClass_all(teachingClassId); // 删除所有关联的教师
 
         // 删除教学班
         teachingClassMapper.deleteTeachingClass(teachingClassId);
