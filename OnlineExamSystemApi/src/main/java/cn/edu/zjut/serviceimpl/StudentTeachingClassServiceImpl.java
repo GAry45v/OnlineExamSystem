@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentTeachingClassServiceImpl implements StudentTeachingClassService {
@@ -42,7 +43,9 @@ public class StudentTeachingClassServiceImpl implements StudentTeachingClassServ
 
         // 调用 Mapper 批量添加学生
         studentTeachingClassMapper.addStudentsToTeachingClass(
-                studentTeachingClasses.stream().map(StudentTeachingClass::getStudentNumber).toList(),
+                studentTeachingClasses.stream()
+                        .map(StudentTeachingClass::getStudentNumber)
+                        .collect(Collectors.toList()), // 使用 Collectors.toList() 替代 toList()
                 studentTeachingClasses.get(0).getTeachingClassId(),
                 currentTimestamp
         );
