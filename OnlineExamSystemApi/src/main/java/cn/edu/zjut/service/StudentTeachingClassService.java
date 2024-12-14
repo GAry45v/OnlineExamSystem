@@ -1,12 +1,14 @@
 package cn.edu.zjut.service;
 
+import cn.edu.zjut.entity.StudentTeachingClass;
+
 import java.util.List;
 
 public interface StudentTeachingClassService {
 
-    // 添加指定学生到教学班
-    void addStudentToTeachingClass(String studentNumber, Integer teachingClassId);
+    // 添加单个学生到教学班
+    void addStudentToTeachingClass(StudentTeachingClass studentTeachingClass);
 
-    // 从学生库中调入多个学生到教学班
-    void addStudentsToTeachingClass(List<String> studentNumbers, Integer teachingClassId);
+    // 批量添加多个学生到教学班
+    void addStudentsToTeachingClass(List<StudentTeachingClass> studentTeachingClasses);
 }
