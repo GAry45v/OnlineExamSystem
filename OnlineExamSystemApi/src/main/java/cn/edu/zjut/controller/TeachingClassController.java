@@ -1,8 +1,12 @@
 package cn.edu.zjut.controller;
 
+import cn.edu.zjut.config.JwtAuthenticationToken;
+import cn.edu.zjut.entity.Teacher;
 import cn.edu.zjut.entity.TeachingClass;
 import cn.edu.zjut.service.TeachingClassService;
+import cn.edu.zjut.vo.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,47 +19,109 @@ public class TeachingClassController {
     private TeachingClassService teachingClassService;
 
     // 创建教学班，并将教师与教学班关联
-    @PostMapping("/create")
-    public String createTeachingClass(@RequestBody TeachingClass teachingClass) {
-        String employeeNumber = "1"; // 假设从登录的教师信息中获得教师ID
-        String role = "主讲";  // 假设角色为 "主讲"
-        teachingClassService.createTeachingClass(teachingClass, employeeNumber, role);
-        return "教学班和教师关联成功";
+    @PostMapping("/create_teaching-class")
+    public ResponseResult<String> createTeachingClass(@RequestBody TeachingClass teachingClass) {
+        try {
+            JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+            String employeeNumber = authentication.getUserNumber();
+            String role = "主讲";  // 假设角色为 "主讲"
+            teachingClassService.createTeachingClass(teachingClass, employeeNumber, role);
+            return ResponseResult.success("教学班和教师关联成功");
+        } catch (Exception e) {
+            return ResponseResult.error("创建教学班失败: " + e.getMessage());
+        }
     }
 
     // 删除教学班
     @DeleteMapping("/delete/{teachingClassId}")
-    public String deleteTeachingClass(@PathVariable Integer teachingClassId) {
-        teachingClassService.deleteTeachingClass(teachingClassId);
-        return "教学班删除成功";
+    public ResponseResult<String> deleteTeachingClass(@PathVariable Integer teachingClassId) {
+        try {
+            JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+            String employeeNumber = authentication.getUserNumber();
+            if(teachingClassService.isMainLecturer(employeeNumber,teachingClassId)){
+                teachingClassService.deleteTeachingClass(teachingClassId,employeeNumber);
+                return ResponseResult.success("教学班删除成功");
+            }else {
+                return ResponseResult.error("无权限删除教学班");
+            }
+        } catch (Exception e) {
+            return ResponseResult.error("删除教学班失败: " + e.getMessage());
+        }
     }
 
     // 查询某个课程所有教学班
-    @GetMapping("/course/{courseId}")
-    public List<TeachingClass> getTeachingClassesByCourseId(@PathVariable Integer courseId) {
-        return teachingClassService.findTeachingClassesByCourseId(courseId);
+    @GetMapping("/course/search_teaching-classby{courseId}")
+    public ResponseResult<List<TeachingClass>> getTeachingClassesByCourseId(@PathVariable Integer courseId) {
+        try {
+            List<TeachingClass> teachingClasses = teachingClassService.findTeachingClassesByCourseId(courseId);
+            return ResponseResult.success(teachingClasses);
+        } catch (Exception e) {
+            return ResponseResult.error("查询课程的教学班失败: " + e.getMessage());
+        }
     }
 
     // 查询某个教师的所有教学班
-    @GetMapping("/teacher/{teacherId}")
-    public List<TeachingClass> getTeachingClassesByEmployeeNumber(@PathVariable String employeeNumber) {
-        return teachingClassService.findTeachingClassesByEmployeeNumber(employeeNumber);
-    }
+    @GetMapping("/teacher/search_teaching-classbyemployeeNumber")
+    public ResponseResult<List<TeachingClass>> getTeachingClassesByEmployeeNumber() {
+        try {
+            JwtAuthenticationToken authentication =
+                    (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+            String employeeNumber = authentication.getUserNumber();
 
+            List<TeachingClass> teachingClasses = teachingClassService.findTeachingClassesByEmployeeNumber(employeeNumber);
+            return ResponseResult.success(teachingClasses);
+        } catch (Exception e) {
+            return ResponseResult.error("查询教学班失败: " + e.getMessage());
+        }
+    }
+    @GetMapping("/teacher/search")
+    public ResponseResult<List<Teacher>> getTeachersByEmployeeNumberOrName(
+            @RequestParam(required = false) String employeeNumber,
+            @RequestParam(required = false) String name) {
+        try {
+            // 调用服务层方法进行查询
+            List<Teacher> teachers = teachingClassService.findTeachersByEmployeeNumberOrName(employeeNumber, name);
+            return ResponseResult.success(teachers);
+        } catch (Exception e) {
+            return ResponseResult.error("查询教师信息失败: " + e.getMessage());
+        }
+    }
     // 关联教学班和教师
-    @PostMapping("/associate")
-    public String associateTeachingClassWithTeacher(@RequestParam String employeeNumber,
-                                                    @RequestParam Integer teachingClassId,
-                                                    @RequestParam String role) {
-        teachingClassService.associateTeachingClassWithTeacher(employeeNumber, teachingClassId, role);
-        return "教学班和教师关联成功";
+    @PostMapping("/associate_teaching-class")
+    public ResponseResult<String> associateTeachingClassWithTeacher(@RequestParam Integer teachingClassId,
+                                                                    @RequestParam String role,
+                                                                    @RequestParam String employeeNumberinput) {
+        try {
+            JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+            String employeeNumber = authentication.getUserNumber();
+            if(teachingClassService.isMainLecturer(employeeNumber,teachingClassId)){
+                teachingClassService.associateTeachingClassWithTeacher(employeeNumberinput, teachingClassId, role);
+                return ResponseResult.success("教学班和教师关联成功");
+            }else {
+                return ResponseResult.error("没有权限关联教学班");
+            }
+
+        } catch (Exception e) {
+            return ResponseResult.error("教学班与教师关联失败: " + e.getMessage());
+        }
     }
 
     // 解绑教师和教学班
-    @DeleteMapping("/disassociate")
-    public String disassociateTeachingClassWithTeacher(@RequestParam String employeeNumber,
-                                                       @RequestParam Integer teachingClassId) {
-        teachingClassService.disassociateTeachingClassWithTeacher(employeeNumber, teachingClassId);
-        return "教学班和教师解绑成功";
+    @DeleteMapping("/disassociate_teaching-class")
+    public ResponseResult<String> disassociateTeachingClassWithTeacher(@RequestParam Integer teachingClassId,
+                                                                       @RequestParam String employeeNumberinput) {
+        try {
+            JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+            String employeeNumber = authentication.getUserNumber();
+            if(teachingClassService.isMainLecturer(employeeNumber,teachingClassId)){
+                teachingClassService.disassociateTeachingClassWithTeacher(employeeNumberinput, teachingClassId);
+                return ResponseResult.success("教学班和教师解绑成功");
+            }else {
+                return ResponseResult.error("没有权限解除绑定教学班");
+            }
+
+        } catch (Exception e) {
+            return ResponseResult.error("解绑教学班和教师失败: " + e.getMessage());
+        }
     }
 }

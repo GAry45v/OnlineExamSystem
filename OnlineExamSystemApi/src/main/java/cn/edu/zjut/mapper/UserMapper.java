@@ -23,7 +23,7 @@ public interface UserMapper {
     boolean checkStudentExist(String userNumber, int schoolId);
 
     // 更新用户信息
-    @Update("UPDATE User SET schoolId = #{schoolId}, userNumber = #{userNumber}, roleId = #{roleId} WHERE phoneNumber = #{phoneNumber}")
+    @Update("UPDATE User SET schoolId = #{schoolId}, userNumber = #{userNumber}, roleId = #{roleId} WHERE phoneNumber = #{phonenumber}")
     void bindUserInfo(User user);
 
         // 根据用户的 userNumber 查询用户信息
