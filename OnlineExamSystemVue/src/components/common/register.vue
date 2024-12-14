@@ -171,8 +171,8 @@
         width: 100%;
         margin: 20px 0px 10px 0px;
         padding: 15px 20px;
-        background-color: rgb(133, 174, 191);
-        border-color: rgb(133, 174, 191);
+        background-color: #409EFF;
+        border-color: #409EFF;
         color: white;}
     }
   

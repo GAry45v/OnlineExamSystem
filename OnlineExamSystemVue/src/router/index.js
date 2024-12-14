@@ -19,6 +19,10 @@ let router = new Router({
       component: () => import('@//components/common/register')
     },
     {
+      path: '/bindUserInfo', //绑定页面
+      component: () => import('@//components/common/bindUserInfo')
+    },
+    {
       path: '/index', //教师主页
       component: () => import('@/components/admin/index'),
       children: [

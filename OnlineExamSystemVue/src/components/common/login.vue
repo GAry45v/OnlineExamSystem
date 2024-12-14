@@ -80,37 +80,51 @@ export default {
                     ...this.formLabelAlign,
                 },
             })
-                .then((res) => {
-                    let resData = res.data.data;
-                    if (resData != null) {
-                        switch (resData.role) {
-                            case "0": //管理员
-                                this.$cookies.set("cname", resData.adminName);
-                                this.$cookies.set("cid", resData.adminId);
-                                this.$cookies.set("role", 0);
-                                this.$router.push({ path: "/index" }); //跳转到首页
-                                break;
-                            case "1": //教师
-                                this.$cookies.set("cname", resData.teacherName);
-                                this.$cookies.set("cid", resData.teacherId);
-                                this.$cookies.set("role", 1);
-                                this.$router.push({ path: "/index" }); //跳转到教师用户
-                                break;
-                            case "2": //学生
-                                this.$cookies.set("cname", resData.studentName);
-                                this.$cookies.set("cid", resData.studentId);
-                                this.$router.push({ path: "/student" });
-                                break;
+            .then((res) => {
+                let resData = res.data.data;
+                if (resData != null) {
+                    const token = resData.token;
+                    localStorage.setItem('token', token);
+                    // 设置axios默认headers
+                    this.$axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                    // 判断是否绑定 (roleId为0表示未绑定)
+                    if (resData.role === "0") {
+                    this.$message({
+                        type: 'warning',
+                        message: '请先完成账号绑定'
+                    });
+                    // 跳转到绑定页面，并传递必要的参数
+                    this.$router.push({
+                        path: '/bindUserInfo',
+                        query: {
+                        phoneNumber: this.formLabelAlign.phoneNumber 
                         }
+                    });
+                    return;
                     }
-                    if (resData == null) {
-                        //错误提示
-                        this.$message({
-                            showClose: true,
-                            type: "error",
-                            message: "手机号或者密码错误",
-                        });
-                    }
+
+                    // 已绑定，根据角色跳转
+                    switch (resData.role) {
+                    case "1": //教师
+                        localStorage.set("roleId", resData.role);
+                        this.$router.push({ path: "/index" }); 
+                        break;
+                    case "2": //学生
+                        localStorage.set("roleId", resData.role);
+                        this.$router.push({ path: "/student" }); 
+                        break;
+                    case "3": //管理员
+                        localStorage.set("roleId", resData.role);
+                        this.$router.push({ path: "/index" }); 
+                        break;}
+                }
+                if (resData == null) {
+                    this.$message({
+                    showClose: true,
+                    type: "error",
+                    message: "手机号或者密码错误",
+                    });
+                }
                 })
                 .catch((e) => {
                     console.log(e);
@@ -256,8 +270,8 @@ a:link {
     width: 100%;
     margin: 20px 0px 10px 0px;
     padding: 15px 20px;
-    background-color: rgb(133, 174, 191);
-    border-color: rgb(133, 174, 191);
+    background-color: #409EFF;
+    border-color: #409EFF;
     color: white
 }
 
