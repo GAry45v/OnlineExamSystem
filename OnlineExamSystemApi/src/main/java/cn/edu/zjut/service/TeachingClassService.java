@@ -11,7 +11,7 @@ public interface TeachingClassService {
     void createTeachingClass(TeachingClass teachingClass, String employeeNumber, String role);
 
     // 删除教学班
-    void deleteTeachingClass(Integer teachingClassId);
+    void deleteTeachingClass(Integer teachingClassId,String employeeNumber);
 
     // 查询某个课程的所有教学班
     List<TeachingClass> findTeachingClassesByCourseId(Integer courseId);

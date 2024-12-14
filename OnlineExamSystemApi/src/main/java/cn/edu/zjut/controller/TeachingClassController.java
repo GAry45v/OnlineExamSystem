@@ -35,7 +35,9 @@ public class TeachingClassController {
     @DeleteMapping("/delete/{teachingClassId}")
     public ResponseResult<String> deleteTeachingClass(@PathVariable Integer teachingClassId) {
         try {
-            teachingClassService.deleteTeachingClass(teachingClassId);
+            JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+            String employeeNumber = authentication.getUserNumber();
+            teachingClassService.deleteTeachingClass(teachingClassId,employeeNumber);
             return ResponseResult.success("教学班删除成功");
         } catch (Exception e) {
             return ResponseResult.error("删除教学班失败: " + e.getMessage());
