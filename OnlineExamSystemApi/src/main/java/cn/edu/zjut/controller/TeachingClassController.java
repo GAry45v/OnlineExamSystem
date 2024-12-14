@@ -1,6 +1,7 @@
 package cn.edu.zjut.controller;
 
 import cn.edu.zjut.config.JwtAuthenticationToken;
+import cn.edu.zjut.entity.Teacher;
 import cn.edu.zjut.entity.TeachingClass;
 import cn.edu.zjut.service.TeachingClassService;
 import cn.edu.zjut.vo.ResponseResult;
@@ -69,7 +70,18 @@ public class TeachingClassController {
             return ResponseResult.error("查询教学班失败: " + e.getMessage());
         }
     }
-
+    @GetMapping("/teacher/search")
+    public ResponseResult<List<Teacher>> getTeachersByEmployeeNumberOrName(
+            @RequestParam(required = false) String employeeNumber,
+            @RequestParam(required = false) String name) {
+        try {
+            // 调用服务层方法进行查询
+            List<Teacher> teachers = teachingClassService.findTeachersByEmployeeNumberOrName(employeeNumber, name);
+            return ResponseResult.success(teachers);
+        } catch (Exception e) {
+            return ResponseResult.error("查询教师信息失败: " + e.getMessage());
+        }
+    }
     // 关联教学班和教师
     @PostMapping("/associate_teaching-class")
     public ResponseResult<String> associateTeachingClassWithTeacher(@RequestParam Integer teachingClassId,

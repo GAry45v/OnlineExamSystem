@@ -1,5 +1,6 @@
 package cn.edu.zjut.service;
 
+import cn.edu.zjut.entity.Teacher;
 import cn.edu.zjut.entity.TeachingClass;
 import cn.edu.zjut.entity.TeacherTeachingClass;
 
@@ -24,4 +25,6 @@ public interface TeachingClassService {
 
     // 解绑教师与教学班
     void disassociateTeachingClassWithTeacher(String employeeNumber, Integer teachingClassId);
+    // 按工号或姓名查询教师
+    List<Teacher> findTeachersByEmployeeNumberOrName(String employeeNumber, String name);
 }

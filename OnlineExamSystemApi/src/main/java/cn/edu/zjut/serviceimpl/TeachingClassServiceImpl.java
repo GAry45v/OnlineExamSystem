@@ -1,5 +1,6 @@
 package cn.edu.zjut.serviceimpl;
 
+import cn.edu.zjut.entity.Teacher;
 import cn.edu.zjut.entity.TeachingClass;
 import cn.edu.zjut.entity.TeacherTeachingClass;
 import cn.edu.zjut.mapper.TeachingClassMapper;
@@ -69,5 +70,10 @@ public class TeachingClassServiceImpl implements TeachingClassService {
     public void disassociateTeachingClassWithTeacher(String employeeNumber, Integer teachingClassId) {
         // 解除教师与教学班的关联
         teachingClassMapper.deleteTeacherTeachingClass(employeeNumber, teachingClassId);
+    }
+    @Override
+    public List<Teacher> findTeachersByEmployeeNumberOrName(String employeeNumber, String name) {
+        // 调用 Mapper 层方法查询教师信息
+        return teachingClassMapper.findTeacherByEmployeeNumberOrName(employeeNumber, name);
     }
 }

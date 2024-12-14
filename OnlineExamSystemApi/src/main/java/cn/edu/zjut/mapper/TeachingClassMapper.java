@@ -1,5 +1,6 @@
 package cn.edu.zjut.mapper;
 
+import cn.edu.zjut.entity.Teacher;
 import cn.edu.zjut.entity.TeachingClass;
 import cn.edu.zjut.entity.TeacherTeachingClass;
 import org.apache.ibatis.annotations.*;
@@ -28,7 +29,22 @@ public interface TeachingClassMapper {
             "JOIN TeacherTeachingClass tt ON t.teachingClassId = tt.teachingClassId " +
             "WHERE tt.employeeNumber = #{employeeNumber}")
     List<TeachingClass> findByEmployeeNumber(@Param("employeeNumber") String employeeNumber);
-
+    @Select({
+            "<script>",
+            "SELECT * FROM Teacher",
+            "WHERE 1=1",
+            "<if test='employeeNumber != null and employeeNumber.trim() != \"\"'>",
+            "AND employeeNumber = #{employeeNumber}",
+            "</if>",
+            "<if test='name != null and name.trim() != \"\"'>",
+            "AND name = #{name}",
+            "</if>",
+            "</script>"
+    })
+    List<Teacher> findTeacherByEmployeeNumberOrName(
+            @Param("employeeNumber") String employeeNumber,
+            @Param("name") String name
+    );
     // 插入教师与教学班的关联
     @Insert("INSERT INTO TeacherTeachingClass(employeeNumber, teachingClassId, role) " +
             "VALUES(#{teacherTeachingClass.employeeNumber}, #{teacherTeachingClass.teachingClassId}, #{teacherTeachingClass.role})")
