@@ -4,6 +4,7 @@ import cn.edu.zjut.entity.StudentTeachingClass;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -29,4 +30,6 @@ public interface StudentTeachingClassMapper {
     void addStudentsToTeachingClass(@Param("studentNumbers") List<String> studentNumbers,
                                     @Param("teachingClassId") Integer teachingClassId,
                                     @Param("enrollmentDate") Timestamp enrollmentDate);
+    @Select("SELECT studentNumber FROM StudentTeachingClass WHERE teachingClassId = #{teachingClassId}")
+    List<String> findStudentNumbersByTeachingClassId(@Param("teachingClassId") Integer teachingClassId);
 }

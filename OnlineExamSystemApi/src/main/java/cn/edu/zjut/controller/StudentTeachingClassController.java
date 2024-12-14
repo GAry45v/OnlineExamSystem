@@ -33,9 +33,11 @@ public class StudentTeachingClassController {
             if (studentNumber != null || name != null) {
                 // 按学号或姓名查询
                 students = studentService.findStudentByStudentNumberOrName(studentNumber, name);
+                System.out.println("1111111111111111111111");
             } else {
                 // 按学院、专业、行政班级查询
                 students = studentService.findStudentsByCollegeMajorClass(collegeId, majorId, classId);
+                System.out.println("0000000000000000000000");
             }
             return ResponseResult.success(students);
         } catch (Exception e) {
@@ -62,6 +64,16 @@ public class StudentTeachingClassController {
             return ResponseResult.success("学生批量加入教学班成功");
         } catch (Exception e) {
             return ResponseResult.error("批量添加学生到教学班失败: " + e.getMessage());
+        }
+    }
+    // 根据教学班 ID 查询所有学生信息
+    @GetMapping("/students")
+    public ResponseResult<List<Student>> getStudentsByTeachingClassId(@RequestParam Integer teachingClassId) {
+        try {
+            List<Student> students = studentTeachingClassService.findStudentsByTeachingClassId(teachingClassId);
+            return ResponseResult.success(students);
+        } catch (Exception e) {
+            return ResponseResult.error("查询教学班内学生信息失败: " + e.getMessage());
         }
     }
 }

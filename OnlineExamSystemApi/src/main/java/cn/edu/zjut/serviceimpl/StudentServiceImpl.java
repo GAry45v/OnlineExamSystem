@@ -6,6 +6,7 @@ import cn.edu.zjut.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,4 +23,13 @@ public class StudentServiceImpl implements StudentService {
     public List<Student> findStudentsByCollegeMajorClass(Integer collegeId, Integer majorId, Integer classId) {
         return studentMapper.findStudentsByCollegeMajorClass(collegeId, majorId, classId);
     }
+
+    @Override
+    public List<Student> findStudentsByStudentNumbers(List<String> studentNumbers) {
+        if (studentNumbers == null || studentNumbers.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return studentMapper.findStudentsByStudentNumbers(studentNumbers);
+    }
+
 }

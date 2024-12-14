@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+
 @Mapper
 public interface StudentMapper {
 
@@ -40,4 +41,15 @@ public interface StudentMapper {
     List<Student> findStudentsByCollegeMajorClass(@Param("collegeId") Integer collegeId,
                                                   @Param("majorId") Integer majorId,
                                                   @Param("classId") Integer classId);
+
+    // 根据学号列表查询学生信息
+    @Select({
+            "<script>",
+            "SELECT * FROM Student WHERE studentNumber IN ",
+            "<foreach collection='studentNumbers' item='studentNumber' open='(' separator=',' close=')'>",
+            "#{studentNumber}",
+            "</foreach>",
+            "</script>"
+    })
+    List<Student> findStudentsByStudentNumbers(@Param("studentNumbers") List<String> studentNumbers);
 }

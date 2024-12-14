@@ -1,7 +1,9 @@
 package cn.edu.zjut.serviceimpl;
 
+import cn.edu.zjut.entity.Student;
 import cn.edu.zjut.entity.StudentTeachingClass;
 import cn.edu.zjut.mapper.StudentTeachingClassMapper;
+import cn.edu.zjut.service.StudentService;
 import cn.edu.zjut.service.StudentTeachingClassService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +17,8 @@ public class StudentTeachingClassServiceImpl implements StudentTeachingClassServ
 
     @Autowired
     private StudentTeachingClassMapper studentTeachingClassMapper;
-
+    @Autowired
+    private StudentService studentService;
     @Override
     public void addStudentToTeachingClass(StudentTeachingClass studentTeachingClass) {
         // 确保入班日期非空
@@ -49,5 +52,13 @@ public class StudentTeachingClassServiceImpl implements StudentTeachingClassServ
                 studentTeachingClasses.get(0).getTeachingClassId(),
                 currentTimestamp
         );
+    }
+    @Override
+    public List<Student> findStudentsByTeachingClassId(Integer teachingClassId) {
+        // 查询教学班内所有学生的学号
+        List<String> studentNumbers = studentTeachingClassMapper.findStudentNumbersByTeachingClassId(teachingClassId);
+
+        // 根据学号列表查询学生信息
+        return studentService.findStudentsByStudentNumbers(studentNumbers);
     }
 }
