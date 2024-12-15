@@ -63,4 +63,23 @@ public interface TeachingClassMapper {
             "AND role = '主讲'")
     int countMainLecturer(@Param("employeeNumber") String employeeNumber,
                           @Param("teachingClassId") Integer teachingClassId);
+
+    // 删除 TeacherTeachingClass 表中关联记录
+    @Delete("""
+        DELETE FROM TeacherTeachingClass 
+        WHERE teachingClassId IN (
+            SELECT teachingClassId 
+            FROM TeachingClass 
+            WHERE courseId = #{courseId}
+        )
+    """)
+    void deleteTeacherTeachingClassByCourseId(@Param("courseId") Integer courseId);
+
+    // 删除 TeachingClass 表中与 courseId 相关的记录
+    @Delete("""
+        DELETE FROM TeachingClass 
+        WHERE courseId = #{courseId}
+    """)
+    void deleteTeachingClassByCourseId(@Param("courseId") Integer courseId);
+
 }

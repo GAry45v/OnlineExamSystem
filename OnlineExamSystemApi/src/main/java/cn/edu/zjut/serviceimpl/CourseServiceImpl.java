@@ -3,6 +3,7 @@ package cn.edu.zjut.serviceimpl;
 import cn.edu.zjut.entity.Course;
 import cn.edu.zjut.entity.TeacherCourse;
 import cn.edu.zjut.mapper.CourseMapper;
+import cn.edu.zjut.mapper.TeachingClassMapper;
 import cn.edu.zjut.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,8 @@ public class CourseServiceImpl implements CourseService {
 
     @Autowired
     private CourseMapper courseMapper;
+    @Autowired
+    private TeachingClassMapper teachingClassMapper;
 
     @Override
     public void createCourse(Course course, String employeeNumber) {
@@ -32,6 +35,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void deleteCourse(Integer courseId, String employeeNumber) {
+        System.out.println(employeeNumber);
         // 验证课程创建人
         List<Course> courses = courseMapper.findCoursesByEmployeeNumber(employeeNumber);
         boolean isCreator = courses.stream()
@@ -41,7 +45,11 @@ public class CourseServiceImpl implements CourseService {
         }
 
         // 删除课程并级联删除关联记录
-        courseMapper.deleteCourse(courseId);
+        courseMapper.deleteFromTeacherCourse(courseId);
+        courseMapper.deleteFromCourse(courseId);
+        //删除课程相关教学班
+        teachingClassMapper.deleteTeacherTeachingClassByCourseId(courseId);
+        teachingClassMapper.deleteTeachingClassByCourseId(courseId);
     }
 
     @Override

@@ -16,13 +16,11 @@ public interface CourseMapper {
     void createCourse(@Param("course") Course course);
 
     // 教师删除课程，同时级联删除 TeacherCourse 表中的记录
-    @Delete({
-            "<script>",
-            "DELETE FROM Course WHERE courseId = #{courseId};",
-            "DELETE FROM TeacherCourse WHERE courseId = #{courseId};",
-            "</script>"
-    })
-    void deleteCourse(@Param("courseId") Integer courseId);
+    @Delete("DELETE FROM TeacherCourse WHERE courseId = #{courseId}")
+    void deleteFromTeacherCourse(@Param("courseId") Integer courseId);
+
+    @Delete("DELETE FROM Course WHERE courseId = #{courseId}")
+    void deleteFromCourse(@Param("courseId") Integer courseId);
 
     // 查询某个教师所创建的所有课程
     @Select("SELECT * FROM Course WHERE createdByEmployeeNumber = #{employeeNumber}")

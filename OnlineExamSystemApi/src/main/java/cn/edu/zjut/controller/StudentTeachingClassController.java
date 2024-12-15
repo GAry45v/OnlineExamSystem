@@ -30,14 +30,13 @@ public class StudentTeachingClassController {
             @RequestParam(required = false) Integer classId) {
         try {
             List<Student> students;
-            if (studentNumber != null || name != null) {
+
+            if (!studentNumber.equals("空") || !name.equals("空")) {
                 // 按学号或姓名查询
                 students = studentService.findStudentByStudentNumberOrName(studentNumber, name);
-                System.out.println("1111111111111111111111");
             } else {
                 // 按学院、专业、行政班级查询
                 students = studentService.findStudentsByCollegeMajorClass(collegeId, majorId, classId);
-                System.out.println("0000000000000000000000");
             }
             return ResponseResult.success(students);
         } catch (Exception e) {

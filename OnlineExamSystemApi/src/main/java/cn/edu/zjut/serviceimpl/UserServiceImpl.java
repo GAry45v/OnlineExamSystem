@@ -3,6 +3,8 @@ package cn.edu.zjut.serviceimpl;
 import cn.edu.zjut.entity.User;
 import cn.edu.zjut.mapper.UserMapper;
 import cn.edu.zjut.service.UserService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;

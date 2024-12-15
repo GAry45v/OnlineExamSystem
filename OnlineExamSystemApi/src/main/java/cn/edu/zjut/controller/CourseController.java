@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,7 +24,6 @@ public class CourseController {
     public ResponseResult<Void> createCourse(@RequestBody Course course) {
         JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         String employeeNumber = authentication.getUserNumber();
-
         try {
             courseService.createCourse(course, employeeNumber);
             return ResponseResult.success("课程创建成功", null);
@@ -46,6 +46,19 @@ public class CourseController {
         }
     }
 
+    @PostMapping("/teacher/get_course")
+    public ResponseResult<List<Course>> getCourse() {
+        JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        String createdByEmployeeNumber = authentication.getUserNumber();
+
+        try {
+            List<Course> ret=new ArrayList<>();
+            ret=courseService.getCoursesByEmployeeNumber(createdByEmployeeNumber);
+            return ResponseResult.success("查询成功", ret);
+        } catch (Exception e) {
+            return ResponseResult.error("查询失败：" + e.getMessage());
+        }
+    }
     // 关联课程与其他教师
     @PostMapping("/teacher/associate_teacher")
     public ResponseResult<Void> associateTeacherWithCourse(@RequestBody TeacherCourse teacherCourse) {
