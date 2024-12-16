@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,44 +25,58 @@ public class QuestionBankServiceImpl implements QuestionBankService {
 
     @Override
     public void addQuestionToBank(Questions question) {
-        // 获取题库ID
         String questionBankId = question.getQuestionBankId();
 
         // 查找题库
         QuestionBank questionBank = questionBankRepository.findById(questionBankId)
                 .orElseThrow(() -> new RuntimeException("题库不存在"));
+        // 为题目生成唯一ID
+        question.setQuestionId(UUID.randomUUID().toString());
+        // 检查题目是否包含资源路径并处理
+        if (question.getResourcePaths() != null && !question.getResourcePaths().isEmpty()) {
+            // 这里可以根据需要执行额外的校验或处理逻辑
+        }
 
-        // 将题目添加到题库的题目列表中
+        // 添加题目到题库
         questionBank.getQuestions().add(question);
 
         // 更新题库
         questionBankRepository.save(questionBank);
     }
-
     @Override
     public void addQuestionsToBank(List<Questions> questions) {
         if (questions == null || questions.isEmpty()) {
             throw new RuntimeException("题目列表不能为空");
         }
 
-        // 获取题库ID
+        // 获取题库ID（假设所有题目属于同一个题库）
         String questionBankId = questions.get(0).getQuestionBankId();
 
         // 查找题库
         QuestionBank questionBank = questionBankRepository.findById(questionBankId)
                 .orElseThrow(() -> new RuntimeException("题库不存在"));
 
-        // 为每个题目设置正确的 questionBankId 并将其添加到题库中
+        // 遍历题目列表
         for (Questions question : questions) {
-            question.setQuestionBankId(questionBankId);  // 确保每个题目都有正确的题库ID
+            // 自动生成题目ID
+            question.setQuestionId(UUID.randomUUID().toString());
+
+            // 确保题目所属的题库ID正确
+            question.setQuestionBankId(questionBankId);
+
+            // 检查题目是否包含资源路径
+            if (question.getResourcePaths() != null && !question.getResourcePaths().isEmpty()) {
+                // 这里可以添加额外的验证逻辑（如果需要）
+            }
         }
 
-        // 添加题目到题库的题目列表
+        // 将题目列表添加到题库
         questionBank.getQuestions().addAll(questions);
 
         // 更新题库
         questionBankRepository.save(questionBank);
     }
+
 
     @Override
     public void deleteQuestionFromBank(Questions question) {
@@ -112,4 +127,6 @@ public class QuestionBankServiceImpl implements QuestionBankService {
                         (difficulty == null || question.getDifficulty().equals(difficulty)))
                 .collect(Collectors.toList());
     }
+
+
 }
