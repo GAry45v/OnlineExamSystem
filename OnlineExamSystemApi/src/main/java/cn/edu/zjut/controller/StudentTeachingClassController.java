@@ -66,7 +66,7 @@ public class StudentTeachingClassController {
         }
     }
     // 根据教学班 ID 查询所有学生信息
-    @GetMapping("/students")
+    @GetMapping("/get-students")
     public ResponseResult<List<Student>> getStudentsByTeachingClassId(@RequestParam Integer teachingClassId) {
         try {
             List<Student> students = studentTeachingClassService.findStudentsByTeachingClassId(teachingClassId);
