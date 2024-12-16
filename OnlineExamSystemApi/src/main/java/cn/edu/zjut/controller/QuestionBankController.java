@@ -1,4 +1,5 @@
 package cn.edu.zjut.controller;
+import cn.edu.zjut.entity.QuestionWithFilesDTO;
 import cn.edu.zjut.util.AliOSSUtils;
 import cn.edu.zjut.entity.QuestionBank;
 import cn.edu.zjut.entity.Questions;
@@ -148,33 +149,39 @@ public class QuestionBankController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("题目添加失败: " + e.getMessage());
         }
     }
-    @PostMapping("/questions/batch/upload")
-    public ResponseEntity<String> addQuestionsWithResources(
-            @RequestPart("questions") List<Questions> questions,
-            @RequestPart("files") List<MultipartFile> files) {
-        try {
-            // 上传文件并获取路径（假设文件的顺序与题目顺序对应）
-            for (int i = 0; i < files.size(); i++) {
-                MultipartFile file = files.get(i);
-                String resourcePath = aliOSSUtils.upload(file); // 上传到阿里云 OSS
-                if (i < questions.size()) {
-                    // 添加路径到题目的资源列表
-                    Questions question = questions.get(i);
-                    if (question.getResourcePaths() == null) {
-                        question.setResourcePaths(new ArrayList<>());
-                    }
-                    question.getResourcePaths().add(resourcePath);
-                }
-            }
-
-            // 添加题目到题库
-            questionBankService.addQuestionsToBank(questions);
-
-            return ResponseEntity.status(HttpStatus.CREATED).body("批量题目添加成功，资源上传成功");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("批量题目添加失败: " + e.getMessage());
-        }
-    }
-
-
+    // 批量上传题目及文件
+//    @PostMapping("/questions/batch/upload")
+//    public ResponseEntity<String> addQuestionsWithResources(
+//            @RequestPart("questions") List<QuestionWithFilesDTO> questionWithFilesList) {
+//        try {
+//            // 遍历每个题目及其对应文件
+//            for (QuestionWithFilesDTO questionWithFiles : questionWithFilesList) {
+//                Questions question = questionWithFiles.getQuestion();
+//                List<MultipartFile> files = questionWithFiles.getFiles();
+//
+//                // 上传文件到 OSS 并获取路径
+//                List<String> resourcePaths = new ArrayList<>();
+//                for (MultipartFile file : files) {
+//                    String resourcePath = aliOSSUtils.upload(file); // 上传文件到 OSS
+//                    resourcePaths.add(resourcePath);
+//                }
+//
+//                // 将文件路径添加到题目
+//                question.setResourcePaths(resourcePaths);
+//            }
+//
+//            // 提取所有题目信息
+//            List<Questions> questions = questionWithFilesList.stream()
+//                    .map(QuestionWithFilesDTO::getQuestion)
+//                    .collect(Collectors.toList());
+//
+//            // 添加所有题目到题库
+//            questionBankService.addQuestionsToBank(questions);
+//
+//            return ResponseEntity.status(HttpStatus.CREATED).body("批量题目添加成功，资源上传成功");
+//        } catch (Exception e) {
+//            e.printStackTrace(); // 调试日志
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("批量题目添加失败: " + e.getMessage());
+//        }
+//    }
 }
