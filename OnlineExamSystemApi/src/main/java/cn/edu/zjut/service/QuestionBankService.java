@@ -6,14 +6,19 @@ import cn.edu.zjut.entity.Questions;
 import java.util.List;
 
 public interface QuestionBankService {
-
     void createQuestionBank(QuestionBank questionBank);
 
-    void addQuestionToBank(String questionBankId, Questions question);
+    void addQuestionToBank(Questions question);
 
-    void addQuestionsToBank(String questionBankId, List<Questions> questions);
+    void addQuestionsToBank(List<Questions> questions);
 
-    void deleteQuestionFromBank(String questionBankId, Integer questionId);
+    void deleteQuestionFromBank(Questions question);
 
     void deleteQuestionBank(String questionBankId);
+
+    List<QuestionBank> findBanksByEmployee(String employeeNumber);
+
+    List<Questions> findQuestionsByBankId(String questionBankId);
+
+    List<Questions> findQuestionsByConditions(String questionBankId, String type, Integer difficulty);
 }
