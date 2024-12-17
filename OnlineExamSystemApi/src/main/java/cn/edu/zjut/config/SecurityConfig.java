@@ -26,7 +26,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/user/login", "/api/user/register").permitAll()  // 登录和注册无需认证
                 .and()
-                .addFilterBefore(jwtAuthenticationFilter, FilterSecurityInterceptor.class) .exceptionHandling();
+                .addFilterBefore(jwtAuthenticationFilter, FilterSecurityInterceptor.class)
+                .addFilterBefore(new OptionsRequestFilter(), JwtAuthenticationFilter.class); // 添加 OPTIONS 请求过滤器;
     }
 }
 
