@@ -35,6 +35,7 @@ public class CourseController {
     // 删除课程
     @DeleteMapping("/teacher/delete_course")
     public ResponseResult<Void> deleteCourse(@RequestParam Integer courseId) {
+        System.out.println("courseId");
         JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         String employeeNumber = authentication.getUserNumber();
 
@@ -64,7 +65,6 @@ public class CourseController {
     public ResponseResult<Void> associateTeacherWithCourse(@RequestBody TeacherCourse teacherCourse) {
         JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         String createdByEmployeeNumber = authentication.getUserNumber();
-
         try {
             courseService.associateTeacherWithCourse(teacherCourse, createdByEmployeeNumber);
             return ResponseResult.success("教师关联成功", null);
