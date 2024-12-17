@@ -86,4 +86,19 @@ public class CourseController {
             return ResponseResult.error("教师解绑失败：" + e.getMessage());
         }
     }
+
+    @PostMapping("/teacher/findTeachersByCourseId")
+    public ResponseResult<List<String>> findTeachersByCourseId(@RequestBody TeacherCourse teacherCourse) {
+        JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        String createdByEmployeeNumber = authentication.getUserNumber();
+        Integer courseId = teacherCourse.getCourseId();
+        try {
+            List<String> teachers = new ArrayList<>();
+            teachers = courseService.findTeachersByCourseId(courseId);
+            return ResponseResult.success("课程与绑定的教师查询成功", teachers);
+        } catch (Exception e) {
+            return ResponseResult.error("课程与绑定的教师查询失败：" + e.getMessage());
+        }
+    }
+
 }
