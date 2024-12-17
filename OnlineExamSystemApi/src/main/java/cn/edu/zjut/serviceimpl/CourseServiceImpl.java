@@ -59,7 +59,6 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void associateTeacherWithCourse(TeacherCourse teacherCourse, String createdByEmployeeNumber) {
-
         courseMapper.addTeacherToCourse(teacherCourse);
     }
 
