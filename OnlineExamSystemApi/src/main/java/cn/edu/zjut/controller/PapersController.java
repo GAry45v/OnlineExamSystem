@@ -23,10 +23,10 @@ public class PapersController {
     private QuestionBankService questionBankService;
 
     // 获取教师的所有题库
-    @GetMapping("/question-banks/{employeeNumber}")
-    public List<QuestionBank> getTeacherQuestionBanks(@PathVariable String employeeNumber) {
-        return questionBankService.findBanksByEmployee(employeeNumber);
-    }
+//    @GetMapping("/question-banks/{employeeNumber}")
+//    public List<QuestionBank> getTeacherQuestionBanks() {
+//        return questionBankService.findBanksByEmployee(employeeNumber);
+//    }
 
     // 获取题库中的题目
     @GetMapping("/{questionBankId}/questions")

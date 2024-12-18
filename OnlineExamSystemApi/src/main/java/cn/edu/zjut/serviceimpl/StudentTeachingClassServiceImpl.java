@@ -61,4 +61,16 @@ public class StudentTeachingClassServiceImpl implements StudentTeachingClassServ
         // 根据学号列表查询学生信息
         return studentService.findStudentsByStudentNumbers(studentNumbers);
     }
+    @Override
+    public void deleteStudentFromTeachingClass(String studentNumber, Integer teachingClassId) {
+        // 删除单个学生
+        studentTeachingClassMapper.deleteStudentFromTeachingClass(studentNumber, teachingClassId);
+    }
+
+    @Override
+    public void deleteStudentsFromTeachingClass(List<String> studentNumbers, Integer teachingClassId) {
+        // 批量删除学生
+        studentTeachingClassMapper.deleteStudentsFromTeachingClass(studentNumbers, teachingClassId);
+    }
 }
+

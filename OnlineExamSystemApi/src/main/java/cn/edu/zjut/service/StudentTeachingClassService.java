@@ -14,4 +14,8 @@ public interface StudentTeachingClassService {
     void addStudentsToTeachingClass(List<StudentTeachingClass> studentTeachingClasses);
     // 查询教学班内的所有学生信息
     List<Student> findStudentsByTeachingClassId(Integer teachingClassId);
+
+    void deleteStudentFromTeachingClass(String studentNumber, Integer teachingClassId);
+
+    void deleteStudentsFromTeachingClass(List<String> studentNumbers, Integer teachingClassId);
 }

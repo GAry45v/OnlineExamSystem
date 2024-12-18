@@ -81,5 +81,11 @@ public interface TeachingClassMapper {
         WHERE courseId = #{courseId}
     """)
     void deleteTeachingClassByCourseId(@Param("courseId") Integer courseId);
-
+    @Select("""
+        SELECT t.* 
+        FROM Teacher t
+        JOIN TeacherTeachingClass tt ON t.employeeNumber = tt.employeeNumber
+        WHERE tt.teachingClassId = #{teachingClassId}
+    """)
+    List<Teacher> findTeachersByTeachingClassId(@Param("teachingClassId") Integer teachingClassId);
 }

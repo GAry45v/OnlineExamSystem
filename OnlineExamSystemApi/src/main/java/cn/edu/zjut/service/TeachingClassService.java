@@ -28,4 +28,6 @@ public interface TeachingClassService {
     void disassociateTeachingClassWithTeacher(String employeeNumber, Integer teachingClassId);
     // 按工号或姓名查询教师
     List<Teacher> findTeachersByEmployeeNumberOrName(String employeeNumber, String name);
+    //查找某个教学班的所有的教师
+    public List<Teacher> findTeachersByTeachingClassId(Integer teachingClassId);
 }
