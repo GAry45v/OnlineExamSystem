@@ -59,23 +59,11 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void associateTeacherWithCourse(TeacherCourse teacherCourse, String createdByEmployeeNumber) {
-        // 验证是否为课程创建人
-        if (!createdByEmployeeNumber.equals(teacherCourse.getEmployeeNumber())) {
-            throw new IllegalArgumentException("只有课程创建人可以关联其他教师，课程ID：" + teacherCourse.getCourseId());
-        }
-
-        // 添加关联
         courseMapper.addTeacherToCourse(teacherCourse);
     }
 
     @Override
     public void disassociateTeacherFromCourse(TeacherCourse teacherCourse, String createdByEmployeeNumber) {
-        // 验证是否为课程创建人
-        if (!createdByEmployeeNumber.equals(teacherCourse.getEmployeeNumber())) {
-            throw new IllegalArgumentException("只有课程创建人可以解绑教师，课程ID：" + teacherCourse.getCourseId());
-        }
-
-        // 删除关联
         courseMapper.removeTeacherFromCourse(teacherCourse);
     }
 

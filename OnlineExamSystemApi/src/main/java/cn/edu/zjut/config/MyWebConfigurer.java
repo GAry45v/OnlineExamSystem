@@ -14,10 +14,10 @@ public class MyWebConfigurer implements WebMvcConfigurer {
          * 在interceptor中配置header了
          */
         corsRegistry.addMapping("/**")
-                .allowCredentials(true)
-                .allowedOrigins("http://localhost:8080")
+                .allowedOrigins("http://localhost:5173")
                 .allowedMethods("POST", "GET", "PUT", "OPTIONS", "DELETE")
                 .allowedHeaders("*")
+                .allowCredentials(true)
                 .maxAge(3600);
     }
 

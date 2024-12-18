@@ -35,6 +35,7 @@ public class CourseController {
     // 删除课程
     @DeleteMapping("/teacher/delete_course")
     public ResponseResult<Void> deleteCourse(@RequestParam Integer courseId) {
+        System.out.println("courseId");
         JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         String employeeNumber = authentication.getUserNumber();
 
@@ -64,7 +65,6 @@ public class CourseController {
     public ResponseResult<Void> associateTeacherWithCourse(@RequestBody TeacherCourse teacherCourse) {
         JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         String createdByEmployeeNumber = authentication.getUserNumber();
-
         try {
             courseService.associateTeacherWithCourse(teacherCourse, createdByEmployeeNumber);
             return ResponseResult.success("教师关联成功", null);
@@ -86,4 +86,19 @@ public class CourseController {
             return ResponseResult.error("教师解绑失败：" + e.getMessage());
         }
     }
+
+    @PostMapping("/teacher/findTeachersByCourseId")
+    public ResponseResult<List<String>> findTeachersByCourseId(@RequestBody TeacherCourse teacherCourse) {
+        JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        String createdByEmployeeNumber = authentication.getUserNumber();
+        Integer courseId = teacherCourse.getCourseId();
+        try {
+            List<String> teachers = new ArrayList<>();
+            teachers = courseService.findTeachersByCourseId(courseId);
+            return ResponseResult.success("课程与绑定的教师查询成功", teachers);
+        } catch (Exception e) {
+            return ResponseResult.error("课程与绑定的教师查询失败：" + e.getMessage());
+        }
+    }
+
 }
