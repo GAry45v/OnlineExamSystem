@@ -1,11 +1,20 @@
 package cn.edu.zjut.entity;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "PaperQuestions")
 public class PaperQuestions {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int paperQuestionId;
+
     private int paperId;
     private String questionType;
     private int marks;
     private int questionOrder;
+    private String questionId; // 新增字段，用于关联题库中的题目
 
     // Getters and Setters
     public int getPaperQuestionId() {
@@ -46,5 +55,13 @@ public class PaperQuestions {
 
     public void setQuestionOrder(int questionOrder) {
         this.questionOrder = questionOrder;
+    }
+
+    public String getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestionId(String questionId) {
+        this.questionId = questionId;
     }
 }

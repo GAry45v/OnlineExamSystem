@@ -122,33 +122,30 @@ public class QuestionBankController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
-    @PostMapping("/questions/upload")
+    @PostMapping("/upload")
     public ResponseEntity<String> addQuestionWithResources(
             @RequestPart("question") Questions question,
             @RequestPart("files") List<MultipartFile> files) {
         try {
-            // 使用 AliOSSUtils 上传文件并获取路径
-            List<String> resourcePaths = files.stream()
-                    .map(file -> {
-                        try {
-                            return aliOSSUtils.upload(file); // 上传文件到 OSS
-                        } catch (IOException e) {
-                            throw new RuntimeException("文件上传失败: " + file.getOriginalFilename(), e);
-                        }
-                    })
-                    .collect(Collectors.toList());
-
-            // 设置资源路径到题目
-            question.setResourcePaths(resourcePaths);
-
-            // 添加题目
-            questionBankService.addQuestionToBank(question);
-
+            // 调用服务层处理文件上传和题目添加
+            questionBankService.addQuestionWithResources(question, files);
             return ResponseEntity.status(HttpStatus.CREATED).body("题目添加成功，资源上传成功");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("题目添加失败: " + e.getMessage());
         }
     }
+    @GetMapping("/bank/{questionBankId}/question/{questionId}")
+    public ResponseEntity<?> getQuestionByBankIdAndQuestionId(
+            @PathVariable String questionBankId,
+            @PathVariable String questionId) {
+        try {
+            Questions question = questionBankService.findQuestionByBankIdAndQuestionId(questionBankId, questionId);
+            return ResponseEntity.ok(question);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("获取题目失败: " + e.getMessage());
+        }
+    }
+
     // 批量上传题目及文件
 //    @PostMapping("/questions/batch/upload")
 //    public ResponseEntity<String> addQuestionsWithResources(
