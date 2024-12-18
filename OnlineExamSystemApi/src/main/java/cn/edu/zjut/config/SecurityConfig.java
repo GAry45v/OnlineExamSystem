@@ -24,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/user/login", "/api/user/register").permitAll()  // 登录和注册无需认证
+                .antMatchers("/api/user/login", "/api/user/register","/demo").permitAll()  // 登录和注册无需认证
                 .and()
 //                .addFilterBefore(jwtAuthenticationFilter, FilterSecurityInterceptor.class);
                 .addFilterBefore(new OptionsRequestFilter(), FilterSecurityInterceptor.class); // 添加 OPTIONS 请求过滤器;

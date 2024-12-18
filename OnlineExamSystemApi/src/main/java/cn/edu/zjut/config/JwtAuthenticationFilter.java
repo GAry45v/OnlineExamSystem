@@ -24,7 +24,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         logger.info("JwtAuthenticationFilter started...");
 
         String requestURI = request.getRequestURI();
-        if ("/api/user/login".equals(requestURI) || "/api/user/register".equals(requestURI)) {
+        if ("/api/user/login".equals(requestURI) || "/api/user/register".equals(requestURI)|| "/demo".equals(requestURI)) {
             filterChain.doFilter(request, response);
             return;
         }
