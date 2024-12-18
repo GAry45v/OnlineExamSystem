@@ -1,4 +1,5 @@
 package cn.edu.zjut.controller;
+import cn.edu.zjut.config.JwtAuthenticationToken;
 import cn.edu.zjut.entity.QuestionWithFilesDTO;
 import cn.edu.zjut.util.AliOSSUtils;
 import cn.edu.zjut.entity.QuestionBank;
@@ -7,6 +8,7 @@ import cn.edu.zjut.service.QuestionBankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,6 +29,9 @@ public class QuestionBankController {
     @PostMapping
     public ResponseEntity<String> createQuestionBank(@RequestBody QuestionBank questionBank) {
         try {
+            JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+            String employeeNumber = authentication.getUserNumber();
+            questionBank.setEmployeeNumber(employeeNumber);
             questionBankService.createQuestionBank(questionBank);
             return ResponseEntity.status(HttpStatus.CREATED).body("题库创建成功");
         } catch (Exception e) {
@@ -38,6 +43,9 @@ public class QuestionBankController {
     @PostMapping("/questions")
     public ResponseEntity<String> addQuestionToBank(@RequestBody Questions question) {
         try {
+            JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+            String employeeNumber = authentication.getUserNumber();
+            question.setEmployeeNumber(employeeNumber);
             questionBankService.addQuestionToBank(question);
             return ResponseEntity.status(HttpStatus.CREATED).body("题目添加成功");
         } catch (Exception e) {
@@ -49,6 +57,11 @@ public class QuestionBankController {
     @PostMapping("/questions/batch")
     public ResponseEntity<String> addQuestionsToBank(@RequestBody List<Questions> questions) {
         try {
+            JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+            String employeeNumber = authentication.getUserNumber();
+            for (int i=0;i< questions.size();i++){
+                questions.get(i).setEmployeeNumber(employeeNumber);
+            }
             questionBankService.addQuestionsToBank(questions);  // 调用服务方法
             return ResponseEntity.status(HttpStatus.CREATED).body("批量题目添加成功");
         } catch (Exception e) {
@@ -91,7 +104,20 @@ public class QuestionBankController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
-
+    @GetMapping("/employee/own")
+    public ResponseEntity<List<QuestionBank>> getBanksown() {
+        try {
+            JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+            String employeeNumber = authentication.getUserNumber();
+            List<QuestionBank> banks = questionBankService.findBanksByEmployee(employeeNumber);
+            if (banks.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(banks);
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(banks);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
     // 查询某个题库中的所有题目
     @GetMapping("/{questionBankId}/questions")
     public ResponseEntity<List<Questions>> getQuestionsByBankId(@PathVariable String questionBankId) {
@@ -128,6 +154,9 @@ public class QuestionBankController {
             @RequestPart("files") List<MultipartFile> files) {
         try {
             // 调用服务层处理文件上传和题目添加
+            JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+            String employeeNumber = authentication.getUserNumber();
+            question.setEmployeeNumber(employeeNumber);
             questionBankService.addQuestionWithResources(question, files);
             return ResponseEntity.status(HttpStatus.CREATED).body("题目添加成功，资源上传成功");
         } catch (Exception e) {
