@@ -1,5 +1,6 @@
 package cn.edu.zjut.service;
 
+import cn.edu.zjut.entity.PaperQuestionWithDetails;
 import cn.edu.zjut.entity.Papers;
 import cn.edu.zjut.entity.Questions;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,8 +12,12 @@ public interface PaperService {
 
     Papers autoGeneratePaper(int paperId, String questionBankId, Map<String, Integer> questionTypeCount, int targetDifficulty);
 
+    Papers autoGeneratePaper(int paperId, String questionBankId, Map<String, Integer> questionTypeCount, Integer targetDifficulty);
+
     void importQuestionsToPaper(int paperId, List<Questions> questions);
 
+
+    void addQuestionToPaper(int paperId, Questions question);
 
     void addQuestionManually(int paperId, Questions question, List<MultipartFile> files) throws Exception;
 
@@ -20,6 +25,6 @@ public interface PaperService {
     void deleteQuestionFromPaper(int paperQuestionId);
     List<Papers> getPapersByTeacher(String employeeNumber);
 
-    List<Questions> getQuestionsWithDetailsByPaperId(int paperId);
+    List<PaperQuestionWithDetails> getQuestionsWithDetailsByPaperId(int paperId);
 
 }
