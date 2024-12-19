@@ -6,6 +6,7 @@ public class Papers {
     private String description;
     private int totalMarks;
     private String employeeNumber;
+    private String questionBankId;  // 新增字段
 
     // Getters and Setters
     public int getPaperId() {
@@ -46,5 +47,13 @@ public class Papers {
 
     public void setEmployeeNumber(String employeeNumber) {
         this.employeeNumber = employeeNumber;
+    }
+
+    public String getQuestionBankId() {   // 新增 getter 方法
+        return questionBankId;
+    }
+
+    public void setQuestionBankId(String questionBankId) {  // 新增 setter 方法
+        this.questionBankId = questionBankId;
     }
 }

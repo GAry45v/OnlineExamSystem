@@ -26,4 +26,6 @@ public interface QuestionBankService {
     void addQuestionWithResources(Questions question, List<MultipartFile> files);
     Questions findQuestionByBankIdAndQuestionId(String questionBankId, String questionId);
 
+    //更新题库中题目的信息
+    void updateQuestionInBank(String questionBankId, Questions updatedQuestion);
 }

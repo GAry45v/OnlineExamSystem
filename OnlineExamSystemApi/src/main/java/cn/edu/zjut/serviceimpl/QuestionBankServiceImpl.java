@@ -167,5 +167,49 @@ public class QuestionBankServiceImpl implements QuestionBankService {
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("题目不存在，ID: " + questionId));
     }
+    //更新题库中题目的信息
+    @Override
+    public void updateQuestionInBank(String questionBankId, Questions updatedQuestion) {
+        // 查找题库
+        QuestionBank questionBank = questionBankRepository.findById(questionBankId)
+                .orElseThrow(() -> new RuntimeException("题库不存在，ID: " + questionBankId));
+
+        // 查找题目
+        List<Questions> questionsList = questionBank.getQuestions();
+        if (questionsList == null || questionsList.isEmpty()) {
+            throw new RuntimeException("题库中没有题目，无法更新");
+        }
+
+        Questions existingQuestion = questionsList.stream()
+                .filter(q -> q.getQuestionId().equals(updatedQuestion.getQuestionId()))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("题目不存在，ID: " + updatedQuestion.getQuestionId()));
+
+        // 更新题目信息，只更新非空字段
+        if (updatedQuestion.getContent() != null) {
+            existingQuestion.setContent(updatedQuestion.getContent());
+        }
+        if (updatedQuestion.getOptions() != null) {
+            existingQuestion.setOptions(updatedQuestion.getOptions());
+        }
+        if (updatedQuestion.getAnswers() != null) {
+            existingQuestion.setAnswers(updatedQuestion.getAnswers());
+        }
+        if (updatedQuestion.getDifficulty() != null) {
+            existingQuestion.setDifficulty(updatedQuestion.getDifficulty());
+        }
+        if (updatedQuestion.getTags() != null) {
+            existingQuestion.setTags(updatedQuestion.getTags());
+        }
+        if (updatedQuestion.getType() != null) {
+            existingQuestion.setType(updatedQuestion.getType());
+        }
+        if (updatedQuestion.getResourcePaths() != null) {
+            existingQuestion.setResourcePaths(updatedQuestion.getResourcePaths());
+        }
+
+        // 保存更新后的题库
+        questionBankRepository.save(questionBank);
+    }
 
 }

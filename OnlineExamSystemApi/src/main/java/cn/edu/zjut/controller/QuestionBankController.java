@@ -174,6 +174,18 @@ public class QuestionBankController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("获取题目失败: " + e.getMessage());
         }
     }
+    @PutMapping("/{questionBankId}/questions")
+    public ResponseEntity<String> updateQuestionInBank(
+            @PathVariable String questionBankId,
+            @RequestBody Questions updatedQuestion) {
+        try {
+            questionBankService.updateQuestionInBank(questionBankId, updatedQuestion);
+            return ResponseEntity.ok("题目更新成功");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("题目更新失败: " + e.getMessage());
+        }
+    }
+
 
     // 批量上传题目及文件
 //    @PostMapping("/questions/batch/upload")
