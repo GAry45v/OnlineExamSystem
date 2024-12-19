@@ -2,6 +2,7 @@ package cn.edu.zjut.controller;
 
 import cn.edu.zjut.config.JwtAuthenticationToken;
 import cn.edu.zjut.entity.Teacher;
+import cn.edu.zjut.entity.TeacherTeachingClass;
 import cn.edu.zjut.entity.TeachingClass;
 import cn.edu.zjut.service.TeachingClassService;
 import cn.edu.zjut.vo.ResponseResult;
@@ -88,12 +89,13 @@ public class TeachingClassController {
     }
     // 关联教学班和教师
     @PostMapping("/associate_teaching-class")
-    public ResponseResult<String> associateTeachingClassWithTeacher(@RequestParam Integer teachingClassId,
-                                                                    @RequestParam String role,
-                                                                    @RequestParam String employeeNumberinput) {
+    public ResponseResult<String> associateTeachingClassWithTeacher(@RequestBody TeacherTeachingClass teacherTeachingClass) {
         try {
             JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
             String employeeNumber = authentication.getUserNumber();
+            Integer teachingClassId = teacherTeachingClass.getTeachingClassId();
+            String role = teacherTeachingClass.getRole();
+            String employeeNumberinput = teacherTeachingClass.getEmployeeNumber();
             if(teachingClassService.isMainLecturer(employeeNumber,teachingClassId)){
                 teachingClassService.associateTeachingClassWithTeacher(employeeNumberinput, teachingClassId, role);
                 return ResponseResult.success("教学班和教师关联成功");
@@ -108,11 +110,12 @@ public class TeachingClassController {
 
     // 解绑教师和教学班
     @DeleteMapping("/disassociate_teaching-class")
-    public ResponseResult<String> disassociateTeachingClassWithTeacher(@RequestParam Integer teachingClassId,
-                                                                       @RequestParam String employeeNumberinput) {
+    public ResponseResult<String> disassociateTeachingClassWithTeacher(@RequestBody TeacherTeachingClass teacherTeachingClass) {
         try {
             JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
             String employeeNumber = authentication.getUserNumber();
+            Integer teachingClassId = teacherTeachingClass.getTeachingClassId();
+            String employeeNumberinput = teacherTeachingClass.getEmployeeNumber();
             if(teachingClassService.isMainLecturer(employeeNumber,teachingClassId)){
                 teachingClassService.disassociateTeachingClassWithTeacher(employeeNumberinput, teachingClassId);
                 return ResponseResult.success("教学班和教师解绑成功");
