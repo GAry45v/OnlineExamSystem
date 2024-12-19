@@ -9,6 +9,16 @@ import java.util.List;
 
 @Mapper
 public interface StudentMapper {
+    // 根据班级ID列表查找学生
+    @Select({
+            "<script>",
+            "SELECT * FROM Student WHERE classId IN ",
+            "<foreach collection='classIds' item='classId' open='(' separator=',' close=')'>",
+            "#{classId}",
+            "</foreach>",
+            "</script>"
+    })
+    List<Student> findStudentsByClassIds(@Param("classIds") List<Integer> classIds);
 
     // 按学号或姓名查找学生
     @Select("<script>" +
@@ -52,4 +62,6 @@ public interface StudentMapper {
             "</script>"
     })
     List<Student> findStudentsByStudentNumbers(@Param("studentNumbers") List<String> studentNumbers);
+    // 根据学院名称查询学院ID
+
 }

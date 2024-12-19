@@ -26,24 +26,25 @@ public class StudentTeachingClassController {
     public ResponseResult<List<Student>> findStudentByStudentNumberOrName(
             @RequestParam(required = false) String studentNumber,
             @RequestParam(required = false) String name,
-            @RequestParam(required = false) Integer collegeId,
-            @RequestParam(required = false) Integer majorId,
-            @RequestParam(required = false) Integer classId) {
+            @RequestParam(required = false) String collegeName,
+            @RequestParam(required = false) String majorName,
+            @RequestParam(required = false) String className) {
         try {
             List<Student> students;
             System.out.println(studentNumber);
-            if (!studentNumber.equals("空") || !name.equals("空")) {
+            if (studentNumber != null && !studentNumber.isEmpty() || name != null && !name.isEmpty()) {
                 // 按学号或姓名查询
                 students = studentService.findStudentByStudentNumberOrName(studentNumber, name);
             } else {
-                // 按学院、专业、行政班级查询
-                students = studentService.findStudentsByCollegeMajorClass(collegeId, majorId, classId);
+                // 按学院名称、专业名称、班级名称查询
+                students = studentService.findStudentsByCollegeMajorClass(collegeName, majorName, className);
             }
             return ResponseResult.success(students);
         } catch (Exception e) {
             return ResponseResult.error("查询学生信息失败: " + e.getMessage());
         }
     }
+
 
     // 添加单个学生到教学班
     @PostMapping("/add-student")

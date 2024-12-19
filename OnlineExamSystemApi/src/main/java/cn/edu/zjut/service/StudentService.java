@@ -9,6 +9,8 @@ public interface StudentService {
     List<Student> findStudentByStudentNumberOrName(String studentNumber, String name);
 
     // 按学院、专业、行政班级查找学生
-    List<Student> findStudentsByCollegeMajorClass(Integer collegeId, Integer majorId, Integer classId);
+
+    List<Student> findStudentsByCollegeMajorClass(String collegeName, String majorName, String className);
+
     List<Student> findStudentsByStudentNumbers(List<String> studentNumbers);
 }
