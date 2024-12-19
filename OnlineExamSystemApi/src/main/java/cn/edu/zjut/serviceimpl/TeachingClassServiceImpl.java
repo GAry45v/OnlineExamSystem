@@ -75,4 +75,9 @@ public class TeachingClassServiceImpl implements TeachingClassService {
         // 调用 Mapper 层方法查询教师信息
         return teachingClassMapper.findTeacherByEmployeeNumberOrName(employeeNumber, name);
     }
+    @Override
+    public List<Teacher> findTeachersByTeachingClassId(Integer teachingClassId) {
+        // 调用 Mapper 层方法查询教师信息
+        return teachingClassMapper.findTeachersByTeachingClassId(teachingClassId);
+    }
 }

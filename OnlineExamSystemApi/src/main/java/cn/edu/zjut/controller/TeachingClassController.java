@@ -124,4 +124,14 @@ public class TeachingClassController {
             return ResponseResult.error("解绑教学班和教师失败: " + e.getMessage());
         }
     }
+    // 查询某个教学班关联的所有教师
+    @GetMapping("/teacher/search-by-teachingClassId")
+    public ResponseResult<List<Teacher>> getTeachersByTeachingClassId(@RequestParam Integer teachingClassId) {
+        try {
+            List<Teacher> teachers = teachingClassService.findTeachersByTeachingClassId(teachingClassId);
+            return ResponseResult.success(teachers);
+        } catch (Exception e) {
+            return ResponseResult.error("查询教学班关联教师失败: " + e.getMessage());
+        }
+    }
 }

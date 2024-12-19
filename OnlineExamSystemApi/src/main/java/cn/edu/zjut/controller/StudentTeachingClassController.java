@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/student-teaching-class")
@@ -75,4 +76,28 @@ public class StudentTeachingClassController {
             return ResponseResult.error("查询教学班内学生信息失败: " + e.getMessage());
         }
     }
+    // 删除单个学生
+    @DeleteMapping("/delete-student")
+    public ResponseResult<String> deleteStudentFromTeachingClass(@RequestParam String studentNumber, @RequestParam Integer teachingClassId) {
+        try {
+            studentTeachingClassService.deleteStudentFromTeachingClass(studentNumber, teachingClassId);
+            return ResponseResult.success("学生成功从教学班移除");
+        } catch (Exception e) {
+            return ResponseResult.error("删除学生失败: " + e.getMessage());
+        }
+    }
+
+    // 批量删除学生
+    @DeleteMapping("/delete-students")
+    public ResponseResult<String> deleteStudentsFromTeachingClass(@RequestBody Map<String, Object> requestBody) {
+        try {
+            List<String> studentNumbers = (List<String>) requestBody.get("studentNumbers");
+            Integer teachingClassId = (Integer) requestBody.get("teachingClassId");
+            studentTeachingClassService.deleteStudentsFromTeachingClass(studentNumbers, teachingClassId);
+            return ResponseResult.success("学生批量从教学班移除成功");
+        } catch (Exception e) {
+            return ResponseResult.error("批量删除学生失败: " + e.getMessage());
+        }
+    }
+
 }
