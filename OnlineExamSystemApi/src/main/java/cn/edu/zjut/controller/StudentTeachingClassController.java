@@ -31,7 +31,7 @@ public class StudentTeachingClassController {
             @RequestParam(required = false) Integer classId) {
         try {
             List<Student> students;
-
+            System.out.println(studentNumber);
             if (!studentNumber.equals("空") || !name.equals("空")) {
                 // 按学号或姓名查询
                 students = studentService.findStudentByStudentNumberOrName(studentNumber, name);

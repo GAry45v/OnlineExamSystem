@@ -16,6 +16,12 @@ public class StudentServiceImpl implements StudentService {
     private StudentMapper studentMapper;
     @Override
     public List<Student> findStudentByStudentNumberOrName(String studentNumber, String name) {
+        if(studentNumber.equals("空")){
+            studentNumber = null;
+        }
+        if(name.equals("空")){
+            name = null;
+        }
         return studentMapper.findStudentByStudentNumberOrName(studentNumber, name);
     }
 
