@@ -1,16 +1,18 @@
 package cn.edu.zjut.entity;
 
-import java.sql.Timestamp;
-
-public class Exam {
+public class ExamDTO {
     private int examId;
     private String examName;
     private String createdByEmployeeNumber;
-    private Timestamp startTime;
+    private String startTime;
     private int durationMinutes;
     private boolean isAntiCheatingEnabled;
-    private int paperId;
     private String examStatus;
+    private int paperId;
+    private String paperName;
+    private String paperDescription;
+    private int paperTotalMarks;
+    private String teacherName;
 
     // Getters and Setters
     public int getExamId() {
@@ -37,11 +39,11 @@ public class Exam {
         this.createdByEmployeeNumber = createdByEmployeeNumber;
     }
 
-    public Timestamp getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Timestamp startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
@@ -53,12 +55,20 @@ public class Exam {
         this.durationMinutes = durationMinutes;
     }
 
-    public boolean isisAntiCheatingEnabled() {
+    public boolean isAntiCheatingEnabled() {
         return isAntiCheatingEnabled;
     }
 
     public void setAntiCheatingEnabled(boolean isAntiCheatingEnabled) {
         this.isAntiCheatingEnabled = isAntiCheatingEnabled;
+    }
+
+    public String getExamStatus() {
+        return examStatus;
+    }
+
+    public void setExamStatus(String examStatus) {
+        this.examStatus = examStatus;
     }
 
     public int getPaperId() {
@@ -69,11 +79,35 @@ public class Exam {
         this.paperId = paperId;
     }
 
-    public String getExamStatus() {
-        return examStatus;
+    public String getPaperName() {
+        return paperName;
     }
 
-    public void setExamStatus(String examStatus) {
-        this.examStatus = examStatus;
+    public void setPaperName(String paperName) {
+        this.paperName = paperName;
+    }
+
+    public String getPaperDescription() {
+        return paperDescription;
+    }
+
+    public void setPaperDescription(String paperDescription) {
+        this.paperDescription = paperDescription;
+    }
+
+    public int getPaperTotalMarks() {
+        return paperTotalMarks;
+    }
+
+    public void setPaperTotalMarks(int paperTotalMarks) {
+        this.paperTotalMarks = paperTotalMarks;
+    }
+
+    public String getTeacherName() {
+        return teacherName;
+    }
+
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
     }
 }

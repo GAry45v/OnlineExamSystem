@@ -18,7 +18,9 @@ public interface StudentMapper {
             "<foreach collection='classIds' item='id' open='(' separator=',' close=')'> #{id} </foreach> </if>" +
             "</script>")
     List<Student> findStudentsByClassIds(@Param("classIds") List<Integer> classIds);
-
+    // 根据教学班ID查询所有学生的学号
+    @Select("SELECT studentNumber FROM StudentTeachingClass WHERE teachingClassId = #{teachingClassId}")
+    List<String> findStudentNumbersByTeachingClassId(Integer teachingClassId);
 
     // 按学号或姓名查找学生
     @Select("<script>" +
@@ -83,4 +85,14 @@ public interface StudentMapper {
                                              @Param("collegeName") String collegeName,
                                              @Param("majorName") String majorName,
                                              @Param("className") String className);
+
+    // 根据学生学号查找学生详细信息
+    @Select("SELECT s.studentId, s.studentNumber, s.name, s.enrollmentYear, " +
+            "c.name AS collegeName, m.name AS majorName, cl.name AS className " +
+            "FROM Student s " +
+            "LEFT JOIN Class cl ON s.classId = cl.classId " +
+            "LEFT JOIN Major m ON cl.majorId = m.majorId " +
+            "LEFT JOIN College c ON m.collegeId = c.collegeId " +
+            "WHERE s.studentNumber = #{studentNumber}")
+    StudentDTO findStudentByStudentNumber(@Param("studentNumber") String studentNumber);
 }

@@ -2,6 +2,7 @@ package cn.edu.zjut.serviceimpl;
 
 import cn.edu.zjut.entity.Student;
 import cn.edu.zjut.entity.StudentTeachingClass;
+import cn.edu.zjut.entity.StudentTeachingClassDTO;
 import cn.edu.zjut.mapper.StudentTeachingClassMapper;
 import cn.edu.zjut.service.StudentService;
 import cn.edu.zjut.service.StudentTeachingClassService;
@@ -19,6 +20,7 @@ public class StudentTeachingClassServiceImpl implements StudentTeachingClassServ
     private StudentTeachingClassMapper studentTeachingClassMapper;
     @Autowired
     private StudentService studentService;
+
     @Override
     public void addStudentToTeachingClass(StudentTeachingClass studentTeachingClass) {
         // 确保入班日期非空
@@ -61,6 +63,12 @@ public class StudentTeachingClassServiceImpl implements StudentTeachingClassServ
         // 根据学号列表查询学生信息
         return studentService.findStudentsByStudentNumbers(studentNumbers);
     }
+    //查询的是详细信息
+    @Override
+    public List<StudentTeachingClassDTO> findStudentsInTeachingClass(Integer teachingClassId) {
+        return studentTeachingClassMapper.findStudentsInTeachingClass(teachingClassId);
+    }
+
     @Override
     public void deleteStudentFromTeachingClass(String studentNumber, Integer teachingClassId) {
         // 删除单个学生
@@ -72,5 +80,10 @@ public class StudentTeachingClassServiceImpl implements StudentTeachingClassServ
         // 批量删除学生
         studentTeachingClassMapper.deleteStudentsFromTeachingClass(studentNumbers, teachingClassId);
     }
+    @Override
+    public List<String> getStudentNumbersByTeachingClassId(int teachingClassId) {
+        return studentTeachingClassMapper.findStudentNumbersByTeachingClassId(teachingClassId);
+    }
+
 }
 

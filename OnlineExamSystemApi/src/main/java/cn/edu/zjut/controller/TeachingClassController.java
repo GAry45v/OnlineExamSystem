@@ -1,9 +1,11 @@
 package cn.edu.zjut.controller;
 
 import cn.edu.zjut.config.JwtAuthenticationToken;
+import cn.edu.zjut.entity.StudentTeachingClassDTO;
 import cn.edu.zjut.entity.Teacher;
 import cn.edu.zjut.entity.TeacherTeachingClass;
 import cn.edu.zjut.entity.TeachingClass;
+import cn.edu.zjut.service.StudentTeachingClassService;
 import cn.edu.zjut.service.TeachingClassService;
 import cn.edu.zjut.vo.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,8 @@ public class TeachingClassController {
 
     @Autowired
     private TeachingClassService teachingClassService;
-
+    @Autowired
+    private StudentTeachingClassService studentTeachingClassService;
     // 创建教学班，并将教师与教学班关联
     @PostMapping("/create_teaching-class")
     public ResponseResult<String> createTeachingClass(@RequestBody TeachingClass teachingClass) {
@@ -137,4 +140,5 @@ public class TeachingClassController {
             return ResponseResult.error("查询教学班关联教师失败: " + e.getMessage());
         }
     }
+
 }

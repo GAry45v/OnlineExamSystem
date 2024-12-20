@@ -3,16 +3,14 @@ package cn.edu.zjut.serviceimpl;
 import cn.edu.zjut.entity.College;
 import cn.edu.zjut.entity.Student;
 import cn.edu.zjut.entity.StudentDTO;
-import cn.edu.zjut.mapper.ClassMapper;
-import cn.edu.zjut.mapper.CollegeMapper;
-import cn.edu.zjut.mapper.MajorMapper;
-import cn.edu.zjut.mapper.StudentMapper;
+import cn.edu.zjut.mapper.*;
 import cn.edu.zjut.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -26,6 +24,8 @@ public class StudentServiceImpl implements StudentService {
     private MajorMapper majorMapper; // 假设有 MajorMapper 处理专业查询
 
     @Autowired
+    private StudentTeachingClassMapper studentTeachingClassMapper;
+
     private ClassMapper classMapper; // 假设有 ClassMapper 处理班级查询
     @Override
     public List<StudentDTO> findStudentByStudentNumberOrName(String studentNumber, String name) {
@@ -64,4 +64,20 @@ public class StudentServiceImpl implements StudentService {
         return studentMapper.findStudentsByStudentNumbers(studentNumbers);
     }
 
+    @Override
+    public StudentDTO getStudentByStudentNumber(String studentNumber) {
+        return studentMapper.findStudentByStudentNumber(studentNumber);
+    }
+    @Override
+    public List<StudentDTO> getStudentsByTeachingClassId(Integer teachingClassId) {
+        // 1. 获取该教学班的所有学生学号
+        List<String> studentNumbers = studentTeachingClassMapper.findStudentNumbersByTeachingClassId(teachingClassId);
+
+        // 2. 根据学号查询学生的详细信息
+        List<StudentDTO> studentDTOs = studentNumbers.stream()
+                .map(studentNumber -> studentMapper.findStudentByStudentNumber(studentNumber))
+                .collect(Collectors.toList());
+
+        return studentDTOs;
+    }
 }

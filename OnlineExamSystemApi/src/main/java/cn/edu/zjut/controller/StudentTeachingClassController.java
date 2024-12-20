@@ -3,6 +3,7 @@ package cn.edu.zjut.controller;
 import cn.edu.zjut.entity.Student;
 import cn.edu.zjut.entity.StudentDTO;
 import cn.edu.zjut.entity.StudentTeachingClass;
+import cn.edu.zjut.entity.StudentTeachingClassDTO;
 import cn.edu.zjut.service.StudentService;
 import cn.edu.zjut.service.StudentTeachingClassService;
 import cn.edu.zjut.vo.ResponseResult;
@@ -100,5 +101,14 @@ public class StudentTeachingClassController {
             return ResponseResult.error("批量删除学生失败: " + e.getMessage());
         }
     }
-
+    // 查询教学班内所有学生的详细信息
+    @GetMapping("/get-students-details")
+    public ResponseResult<List<StudentTeachingClassDTO>> getStudentsInTeachingClassWithDetails(@RequestParam Integer teachingClassId) {
+        try {
+            List<StudentTeachingClassDTO> students = studentTeachingClassService.findStudentsInTeachingClass(teachingClassId);
+            return ResponseResult.success(students);
+        } catch (Exception e) {
+            return ResponseResult.error("查询教学班内学生详细信息失败: " + e.getMessage());
+        }
+    }
 }

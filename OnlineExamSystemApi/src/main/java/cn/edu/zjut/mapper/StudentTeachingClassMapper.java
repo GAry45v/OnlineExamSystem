@@ -1,6 +1,7 @@
 package cn.edu.zjut.mapper;
 
 import cn.edu.zjut.entity.StudentTeachingClass;
+import cn.edu.zjut.entity.StudentTeachingClassDTO;
 import org.apache.ibatis.annotations.*;
 
 import java.sql.Timestamp;
@@ -43,5 +44,32 @@ public interface StudentTeachingClassMapper {
             "</script>"
     })
     void deleteStudentsFromTeachingClass(@Param("studentNumbers") List<String> studentNumbers, @Param("teachingClassId") Integer teachingClassId);
+    // 查询教学班内所有学生的详细信息
+    @Select("""
+        SELECT 
+            stc.teachingClassId,
+            tc.className AS teachingClassName, -- 将 tc.name 改为 tc.className
+            s.studentNumber,
+            s.name AS studentName,
+            c.name AS collegeName,
+            m.name AS majorName,
+            cl.name AS className
+        FROM 
+            StudentTeachingClass stc
+        JOIN 
+            Student s ON stc.studentNumber = s.studentNumber
+        JOIN 
+            TeachingClass tc ON stc.teachingClassId = tc.teachingClassId
+        JOIN 
+            Class cl ON s.classId = cl.classId
+        JOIN 
+            Major m ON cl.majorId = m.majorId
+        JOIN 
+            College c ON m.collegeId = c.collegeId
+        WHERE 
+            stc.teachingClassId = #{teachingClassId};
+        """)
+    List<StudentTeachingClassDTO> findStudentsInTeachingClass(@Param("teachingClassId") Integer teachingClassId);
+
 }
 
