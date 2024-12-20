@@ -1,6 +1,7 @@
 package cn.edu.zjut.controller;
 
 import cn.edu.zjut.entity.Student;
+import cn.edu.zjut.entity.StudentDTO;
 import cn.edu.zjut.entity.StudentTeachingClass;
 import cn.edu.zjut.service.StudentService;
 import cn.edu.zjut.service.StudentTeachingClassService;
@@ -23,20 +24,19 @@ public class StudentTeachingClassController {
 
     // 查询学生信息
     @GetMapping("/students/search")
-    public ResponseResult<List<Student>> findStudentByStudentNumberOrName(
+    public ResponseResult<List<StudentDTO>> findStudentByStudentNumberOrName(
             @RequestParam(required = false) String studentNumber,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String collegeName,
             @RequestParam(required = false) String majorName,
             @RequestParam(required = false) String className) {
         try {
-            List<Student> students;
-            System.out.println(studentNumber);
-            if (studentNumber != null && !studentNumber.isEmpty() || name != null && !name.isEmpty()) {
-                // 按学号或姓名查询
+            List<StudentDTO> students;
+            if (!studentNumber.equals("空") || !name.equals("空")) {
+            // 按学号或姓名查询
                 students = studentService.findStudentByStudentNumberOrName(studentNumber, name);
             } else {
-                // 按学院名称、专业名称、班级名称查询
+            // 按学院名称、专业名称、班级名称查询
                 students = studentService.findStudentsByCollegeMajorClass(collegeName, majorName, className);
             }
             return ResponseResult.success(students);

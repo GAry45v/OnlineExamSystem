@@ -2,6 +2,7 @@ package cn.edu.zjut.serviceimpl;
 
 import cn.edu.zjut.entity.College;
 import cn.edu.zjut.entity.Student;
+import cn.edu.zjut.entity.StudentDTO;
 import cn.edu.zjut.mapper.ClassMapper;
 import cn.edu.zjut.mapper.CollegeMapper;
 import cn.edu.zjut.mapper.MajorMapper;
@@ -27,27 +28,31 @@ public class StudentServiceImpl implements StudentService {
     @Autowired
     private ClassMapper classMapper; // 假设有 ClassMapper 处理班级查询
     @Override
-    public List<Student> findStudentByStudentNumberOrName(String studentNumber, String name) {
+    public List<StudentDTO> findStudentByStudentNumberOrName(String studentNumber, String name) {
         if(studentNumber.equals("空")){
             studentNumber = null;
         }
         if(name.equals("空")){
             name = null;
         }
-        return studentMapper.findStudentByStudentNumberOrName(studentNumber, name);
+        return studentMapper.findStudentsWithDetails(studentNumber, name, null, null, null);
     }
     @Override
-    public List<Student> findStudentsByCollegeMajorClass(String collegeName, String majorName, String className) {
-        // 通过学院名称获取学院ID
-        List<Integer> collegeIds = collegeMapper.findCollegeIdsByName(collegeName);
-        // 通过专业名称和学院ID获取专业ID
-        List<Integer> majorIds = majorMapper.findMajorIdsByNameAndCollege(collegeIds, majorName);
-        // 通过班级名称和专业ID获取班级ID
-        List<Integer> classIds = classMapper.findClassIdsByNameAndMajor(majorIds, className);
-
-        // 根据班级ID查询学生
-        return studentMapper.findStudentsByClassIds(classIds);
+    public List<StudentDTO> findStudentsByCollegeMajorClass(String collegeName, String majorName, String className) {
+        // 提前声明变量
+        if(collegeName.equals("空")){
+            collegeName = null;
+        }
+        if(majorName.equals("空")){
+            majorName = null;
+        }
+        if(className.equals("空")){
+            className = null;
+        }
+        // 使用提前声明的变量
+        return studentMapper.findStudentsWithDetails(null, null, collegeName, majorName, className);
     }
+
 
 
 
