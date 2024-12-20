@@ -42,7 +42,7 @@ public class AliOSSUtils {
         //文件访问路径
         String url = endpoint.split("//")[0] + "//" + bucketName + "." + endpoint.split("//")[1] + "/" + fileName;
         // 关闭ossClient
-        System.out.println(11111111+url);
+
         ossClient.shutdown();
         return url;// 把上传到oss的路径返回
     }

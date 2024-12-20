@@ -1,5 +1,6 @@
 package cn.edu.zjut.serviceimpl;
 
+import cn.edu.zjut.controller.QuestionBankController;
 import cn.edu.zjut.entity.PaperQuestionWithDetails;
 import cn.edu.zjut.entity.Papers;
 import cn.edu.zjut.entity.PaperQuestions;
@@ -117,16 +118,20 @@ public class PaperServiceImpl implements PaperService {
         paperQuestionsMapper.addQuestionToPaper(paperQuestion);
     }
 
-
     @Override
     public void addQuestionManually(int paperId, Questions question, List<MultipartFile> files) throws Exception {
+    }
+
+
+    @Override
+    public void addQuestionManually(int paperId, Questions question, List<MultipartFile> files, List<QuestionBankController.FileMetadata> fileMetadataList) throws Exception {
         // 生成唯一的题目ID
         question.setQuestionId(UUID.randomUUID().toString());
 
         // 判断是否有文件信息
         if (files != null && !files.isEmpty()) {
             // 调用带文件的题目添加方法
-            questionBankService.addQuestionWithResources(question, files);
+            questionBankService.addQuestionWithResources(question, files, fileMetadataList);
         } else {
             // 调用普通题目添加方法
             questionBankService.addQuestionToBank(question);

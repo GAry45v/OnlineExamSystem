@@ -97,36 +97,37 @@ public class PapersController {
     }
 
 
-    // 手动添加题目
-    @PostMapping("/{paperId}/add-question")
-    public String addQuestionToPaper(@PathVariable int paperId,
-                                     @RequestParam("questionBankId") String questionBankId,
-                                     @RequestPart("question") Questions question,
-                                     @RequestPart(value = "files", required = false) List<MultipartFile> files) {
-        try {
-            // 从 Token 中获取教师编号
-            JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-            String employeeNumber = authentication.getUserNumber();
-
-            // 设置题目的 questionBankId 和 employeeNumber
-            question.setQuestionBankId(questionBankId);
-            question.setEmployeeNumber(employeeNumber);
-
-            // 判断是否有文件参数，调用不同的方法将题目添加到题库
-            if (files != null && !files.isEmpty()) {
-                questionBankService.addQuestionWithResources(question, files); // 调用带文件的方法
-            } else {
-                questionBankService.addQuestionToBank(question); // 调用无文件的方法
-            }
-
-            // 关联题目到试卷
-            paperService.addQuestionToPaper(paperId, question);
-
-            return "题目添加成功";
-        } catch (Exception e) {
-            return "题目添加失败：" + e.getMessage();
-        }
-    }
+//    // 手动添加题目
+//    @PostMapping("/{paperId}/add-question")
+//    public String addQuestionToPaper(@PathVariable int paperId,
+//                                     @RequestParam("questionBankId") String questionBankId,
+//                                     @RequestPart("question") Questions question,
+//                                     @RequestPart(value = "files", required = false) List<MultipartFile> files) {
+//        try {
+//            // 从 Token 中获取教师编号
+//            JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+//            String employeeNumber = authentication.getUserNumber();
+//
+//            // 设置题目的 questionBankId 和 employeeNumber
+//            question.setQuestionBankId(questionBankId);
+//            question.setEmployeeNumber(employeeNumber);
+//
+//            // 判断是否有文件参数，调用不同的方法将题目添加到题库
+//            if (files != null && !files.isEmpty()) {
+//                List<QuestionBankController.FileMetadata> fileMetadataList;
+//                questionBankService.addQuestionWithResources(question, files, fileMetadataList); // 调用带文件的方法
+//            } else {
+//                questionBankService.addQuestionToBank(question); // 调用无文件的方法
+//            }
+//
+//            // 关联题目到试卷
+//            paperService.addQuestionToPaper(paperId, question);
+//
+//            return "题目添加成功";
+//        } catch (Exception e) {
+//            return "题目添加失败：" + e.getMessage();
+//        }
+//    }
 
     // 删除试卷中的题目
     @DeleteMapping("/delete-question/{paperQuestionId}")

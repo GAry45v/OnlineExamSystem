@@ -1,5 +1,6 @@
 package cn.edu.zjut.service;
 
+import cn.edu.zjut.controller.QuestionBankController;
 import cn.edu.zjut.entity.PaperQuestionWithDetails;
 import cn.edu.zjut.entity.Papers;
 import cn.edu.zjut.entity.Questions;
@@ -21,6 +22,8 @@ public interface PaperService {
 
     void addQuestionManually(int paperId, Questions question, List<MultipartFile> files) throws Exception;
 
+
+    void addQuestionManually(int paperId, Questions question, List<MultipartFile> files, List<QuestionBankController.FileMetadata> fileMetadataList) throws Exception;
 
     void deleteQuestionFromPaper(int paperQuestionId);
     List<Papers> getPapersByTeacher(String employeeNumber);
