@@ -11,6 +11,7 @@ public interface ExamService {
     <ExamDTO> List<ExamDTO> findExamsByTeacher(String employeeNumber);
     void updateExam(Exam exam);
     void deleteExam(int examId);
+    Exam findExamById(int examId);
 
     void publishExamToStudent(StudentExam studentExam);
 }

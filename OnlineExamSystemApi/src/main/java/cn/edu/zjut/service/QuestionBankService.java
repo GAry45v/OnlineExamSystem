@@ -1,5 +1,6 @@
 package cn.edu.zjut.service;
 
+import cn.edu.zjut.controller.QuestionBankController;
 import cn.edu.zjut.entity.QuestionBank;
 import cn.edu.zjut.entity.Questions;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +24,7 @@ public interface QuestionBankService {
 
     List<Questions> findQuestionsByConditions(String questionBankId, String type, Integer difficulty);
 
-    void addQuestionWithResources(Questions question, List<MultipartFile> files);
+    void addQuestionWithResources(Questions question, List<MultipartFile> files, List<QuestionBankController.FileMetadata> fileMetadataList);
     Questions findQuestionByBankIdAndQuestionId(String questionBankId, String questionId);
 
     //更新题库中题目的信息
