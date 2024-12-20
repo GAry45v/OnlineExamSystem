@@ -51,7 +51,7 @@ public class PapersController {
     @PostMapping("/{paperId}/auto-generate")
     public String autoGeneratePaper(@PathVariable int paperId,
                                     @RequestParam String questionBankId,
-                                    @RequestBody cn.edu.zjut.dto.AutoGeneratePaperDTO autoGeneratePaperDTO) {
+                                    @RequestBody cn.edu.zjut.entity.AutoGeneratePaperDTO autoGeneratePaperDTO) {
         try {
             // 从 DTO 中获取参数
             Map<String, Integer> questionTypeCount = autoGeneratePaperDTO.getQuestionTypeCount();
