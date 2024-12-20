@@ -9,10 +9,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
 @RestController
 @RequestMapping("/api/papers")
 public class PapersController {
@@ -28,7 +28,6 @@ public class PapersController {
     public List<QuestionBank> getTeacherQuestionBanks() {
         JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         String employeeNumber = authentication.getUserNumber(); // 从 Token 中获取教师编号
-        System.out.println(employeeNumber);
         return questionBankService.findBanksByEmployee(employeeNumber);
     }
 
@@ -52,43 +51,42 @@ public class PapersController {
     @PostMapping("/{paperId}/auto-generate")
     public String autoGeneratePaper(@PathVariable int paperId,
                                     @RequestParam String questionBankId,
-                                    @RequestBody Map<String, Integer> questionTypeCount,
-                                    @RequestParam(required = false) Integer targetDifficulty) {  // targetDifficulty 是可选的
+                                    @RequestBody cn.edu.zjut.dto.AutoGeneratePaperDTO autoGeneratePaperDTO) {
         try {
-            paperService.autoGeneratePaper(paperId, questionBankId, questionTypeCount, targetDifficulty);
+            // 从 DTO 中获取参数
+            Map<String, Integer> questionTypeCount = autoGeneratePaperDTO.getQuestionTypeCount();
+            Map<String, Integer> questionTypeScore = autoGeneratePaperDTO.getQuestionTypeScore();
+            Integer targetDifficulty = autoGeneratePaperDTO.getTargetDifficulty();
+
+            // 调用 Service
+            paperService.autoGeneratePaper(paperId, questionBankId, questionTypeCount, questionTypeScore, targetDifficulty);
+
             return "智能组卷成功！";
         } catch (RuntimeException e) {
             return e.getMessage();
         }
     }
 
-
     // 手动组卷 - 批量导入题目
     @PostMapping("/{paperId}/import-questions")
     public String importQuestions(
             @PathVariable int paperId,
             @RequestParam String questionBankId, // 从参数中获取 questionBankId
-            @RequestBody List<Questions> questions) {
+            @RequestBody List<PaperQuestionDTO> questionsWithMarks) {
         try {
-            // 从 Token 中获取教师编号
-            JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-            String employeeNumber = authentication.getUserNumber(); // 从 Token 中获取 employeeNumber
+            // 遍历 DTO，提取题目信息和分数
+            List<Questions> questions = new ArrayList<>();
+            List<Integer> marks = new ArrayList<>();
 
-            // 遍历题目列表，设置 questionBankId 和 employeeNumber
-            for (Questions question : questions) {
+            for (PaperQuestionDTO dto : questionsWithMarks) {
+                Questions question = dto.getQuestion();
                 question.setQuestionBankId(questionBankId); // 设置题库ID
-                question.setEmployeeNumber(employeeNumber); // 设置教师编号
-
-                // 添加题目到题库
-                if (question.getQuestionId() == null || question.getQuestionId().isEmpty()) {
-                    // 如果题目ID为空，生成新的ID，并添加到题库
-                    question.setQuestionId(UUID.randomUUID().toString());
-                    questionBankService.addQuestionToBank(question);
-                }
+                questions.add(question);
+                marks.add(dto.getMarks()); // 获取对应的分数
             }
 
-            // 将题目与试卷关联
-            paperService.importQuestionsToPaper(paperId, questions);
+            // 批量关联题目到试卷
+            paperService.importQuestionsToPaper(paperId, questions, marks);
 
             return "批量导入题目成功";
         } catch (Exception e) {
@@ -96,38 +94,38 @@ public class PapersController {
         }
     }
 
+    // 手动添加题目
+    @PostMapping("/{paperId}/add-question")
+    public String addQuestionToPaper(@PathVariable int paperId,
+                                     @RequestParam("questionBankId") String questionBankId,
+                                     @RequestPart("question") Questions question,
+                                     @RequestPart(value = "files", required = false) List<MultipartFile> files,
+                                     @RequestParam("marks") int marks) { // 增加单题分数参数
+        try {
+            // 从 Token 中获取教师编号
+            JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+            String employeeNumber = authentication.getUserNumber();
 
-//    // 手动添加题目
-//    @PostMapping("/{paperId}/add-question")
-//    public String addQuestionToPaper(@PathVariable int paperId,
-//                                     @RequestParam("questionBankId") String questionBankId,
-//                                     @RequestPart("question") Questions question,
-//                                     @RequestPart(value = "files", required = false) List<MultipartFile> files) {
-//        try {
-//            // 从 Token 中获取教师编号
-//            JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-//            String employeeNumber = authentication.getUserNumber();
-//
-//            // 设置题目的 questionBankId 和 employeeNumber
-//            question.setQuestionBankId(questionBankId);
-//            question.setEmployeeNumber(employeeNumber);
-//
-//            // 判断是否有文件参数，调用不同的方法将题目添加到题库
-//            if (files != null && !files.isEmpty()) {
-//                List<QuestionBankController.FileMetadata> fileMetadataList;
-//                questionBankService.addQuestionWithResources(question, files, fileMetadataList); // 调用带文件的方法
-//            } else {
-//                questionBankService.addQuestionToBank(question); // 调用无文件的方法
-//            }
-//
-//            // 关联题目到试卷
-//            paperService.addQuestionToPaper(paperId, question);
-//
-//            return "题目添加成功";
-//        } catch (Exception e) {
-//            return "题目添加失败：" + e.getMessage();
-//        }
-//    }
+            // 设置题目的 questionBankId 和 employeeNumber
+            question.setQuestionBankId(questionBankId);
+            question.setEmployeeNumber(employeeNumber);
+
+            // 判断是否有文件参数，调用不同的方法将题目添加到题库
+            if (files != null && !files.isEmpty()) {
+                List<QuestionBankController.FileMetadata> fileMetadataList = new ArrayList<>();
+                questionBankService.addQuestionWithResources(question, files, fileMetadataList); // 调用带文件的方法
+            } else {
+                questionBankService.addQuestionToBank(question); // 调用无文件的方法
+            }
+
+            // 关联题目到试卷，同时设置分数
+            paperService.addQuestionToPaper(paperId, question, marks);
+
+            return "题目添加成功";
+        } catch (Exception e) {
+            return "题目添加失败：" + e.getMessage();
+        }
+    }
 
     // 删除试卷中的题目
     @DeleteMapping("/delete-question/{paperQuestionId}")
@@ -145,10 +143,9 @@ public class PapersController {
         return paperService.getPapersByTeacher(employeeNumber); // 使用获取的 employeeNumber 调用 service 层
     }
 
-
     // 获取试卷的题目详细信息
     @GetMapping("/{paperId}/questions-details")
-    public List<PaperQuestionWithDetails> getQuestionsWithDetails(@PathVariable int paperId) {
+    public List<PaperQuestionDTO> getQuestionsWithDetails(@PathVariable int paperId) {
         return paperService.getQuestionsWithDetailsByPaperId(paperId);
     }
 }

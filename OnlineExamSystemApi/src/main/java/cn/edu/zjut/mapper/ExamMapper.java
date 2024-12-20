@@ -21,4 +21,7 @@ public interface ExamMapper {
 
     @Delete("DELETE FROM Exam WHERE examId = #{examId}")
     void deleteExam(@Param("examId") int examId);
+    @Select("SELECT * FROM Exam WHERE examId = #{examId}")
+    Exam findExamById(@Param("examId") int examId);
+
 }

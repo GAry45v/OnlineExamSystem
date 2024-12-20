@@ -44,7 +44,10 @@ public class ExamController {
         String employeeNumber = authentication.getUserNumber(); // 从 Token 中获取教师编号
         return examService.findExamsByTeacher(employeeNumber);
     }
-
+    @GetMapping("/{examId}")
+    public Exam getExamById(@PathVariable int examId) {
+        return examService.findExamById(examId);
+    }
     // 修改考试信息
     @PutMapping("/{examId}")
     public String updateExam(@PathVariable int examId, @RequestBody Exam exam) {

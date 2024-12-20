@@ -80,4 +80,13 @@ public class ExamServiceImpl implements ExamService {
     public void publishExamToStudent(StudentExam studentExam) {
         studentExamMapper.insertStudentExam(studentExam);
     }
+    @Override
+    public Exam findExamById(int examId) {
+        Exam exam = examMapper.findExamById(examId);
+        if (exam == null) {
+            throw new RuntimeException("考试不存在，ID: " + examId);
+        }
+        return exam;
+    }
+
 }
