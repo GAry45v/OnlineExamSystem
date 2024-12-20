@@ -8,16 +8,21 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Date;
+import cn.edu.zjut.config.RedisConfig.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
@@ -63,15 +68,28 @@ public class UserServiceImpl implements UserService {
 
     public String login(User user) {
         // 查询数据库，验证用户名和密码是否匹配
-        User dbUser = userMapper.getUserByphonenumber(user.getPhoneNumber());
-        if (dbUser == null || !passwordEncoder.matches(user.getPassword(), dbUser.getPassword())) {
-            throw new RuntimeException("Invalid username or password");
+
+        String redisKey = "user:phoneNumber:" + user.getPhoneNumber();
+        User cachedUser = (User) redisTemplate.opsForValue().get(redisKey);
+        if (cachedUser != null) {
+            if (!passwordEncoder.matches(user.getPassword(), cachedUser.getPassword())) {
+                throw new RuntimeException("Invalid username or password");
+            }
+            System.out.println("Cache hit!");
+        }else {
+            System.out.println("Cache miss! Fetching from DB...");
+            cachedUser = userMapper.getUserByphonenumber(user.getPhoneNumber());
+
+            if (cachedUser == null || !passwordEncoder.matches(user.getPassword(), cachedUser.getPassword())) {
+                throw new RuntimeException("Invalid username or password");
+            }
+            redisTemplate.opsForValue().set(redisKey, cachedUser, 1, TimeUnit.HOURS);
         }
 
         // 生成 JWT Token
-        String token = generateToken(dbUser);
+        String token = generateToken(cachedUser);
 
-        return token+dbUser.getRoleId();
+        return token+cachedUser.getRoleId();
     }
 
     // 生成 JWT Token
