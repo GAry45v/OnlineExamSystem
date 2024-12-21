@@ -11,6 +11,7 @@ public class Exam {
     private boolean isAntiCheatingEnabled;
     private int paperId;
     private String examStatus;
+    private Timestamp endTime; // 新增字段：考试结束时间
 
     // Getters and Setters
     public int getExamId() {
@@ -75,5 +76,13 @@ public class Exam {
 
     public void setExamStatus(String examStatus) {
         this.examStatus = examStatus;
+    }
+
+    public Timestamp getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Timestamp endTime) {
+        this.endTime = endTime;
     }
 }

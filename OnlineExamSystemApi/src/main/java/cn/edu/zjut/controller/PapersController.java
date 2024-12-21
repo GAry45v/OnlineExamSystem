@@ -4,10 +4,13 @@ import cn.edu.zjut.config.JwtAuthenticationToken;
 import cn.edu.zjut.entity.*;
 import cn.edu.zjut.service.PaperService;
 import cn.edu.zjut.service.QuestionBankService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import com.fasterxml.jackson.core.type.TypeReference;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,12 +98,12 @@ public class PapersController {
         }
     }
 
-    // 手动添加题目
     @PostMapping("/{paperId}/add-question")
     public String addQuestionToPaper(@PathVariable int paperId,
                                      @RequestParam("questionBankId") String questionBankId,
                                      @RequestPart("question") Questions question,
                                      @RequestPart(value = "files", required = false) List<MultipartFile> files,
+                                     @RequestPart("fileMetadata") String fileMetadataJson, // 新增文件元数据 JSON
                                      @RequestParam("marks") int marks) { // 增加单题分数参数
         try {
             // 从 Token 中获取教师编号
@@ -111,9 +114,13 @@ public class PapersController {
             question.setQuestionBankId(questionBankId);
             question.setEmployeeNumber(employeeNumber);
 
+            // 解析 fileMetadataJson 为 List<QuestionBankController.FileMetadata>
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<QuestionBankController.FileMetadata> fileMetadataList = objectMapper.readValue(fileMetadataJson,
+                    new TypeReference<List<QuestionBankController.FileMetadata>>() {});
+
             // 判断是否有文件参数，调用不同的方法将题目添加到题库
             if (files != null && !files.isEmpty()) {
-                List<QuestionBankController.FileMetadata> fileMetadataList = new ArrayList<>();
                 questionBankService.addQuestionWithResources(question, files, fileMetadataList); // 调用带文件的方法
             } else {
                 questionBankService.addQuestionToBank(question); // 调用无文件的方法
@@ -127,6 +134,7 @@ public class PapersController {
             return "题目添加失败：" + e.getMessage();
         }
     }
+
 
     // 删除试卷中的题目
     @DeleteMapping("/delete-question/{paperQuestionId}")

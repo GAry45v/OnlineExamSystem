@@ -13,8 +13,17 @@ public class ExamDTO {
     private String paperDescription;
     private int paperTotalMarks;
     private String teacherName;
+    private String endTime; // 新增字段：考试结束时间
+    // Getters and Setters
 
     // Getters and Setters
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
     public int getExamId() {
         return examId;
     }

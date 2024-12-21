@@ -48,6 +48,7 @@ public class ExamServiceImpl implements ExamService {
             dto.setAntiCheatingEnabled(exam.isisAntiCheatingEnabled());
             dto.setExamStatus(exam.getExamStatus());
             dto.setPaperId(exam.getPaperId());
+            dto.setEndTime(exam.getEndTime().toString());
 
             // 获取试卷信息
             Papers paper = papersMapper.findPaperById(exam.getPaperId());
