@@ -39,13 +39,14 @@ public class PapersController {
 
     // 创建试卷
     @PostMapping("/create")
-    public String createPaper(@RequestBody Papers paper) {
+    public Papers createPaper(@RequestBody Papers paper) {
         JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         String employeeNumber = authentication.getUserNumber(); // 从 Token 中获取教师编号
         paper.setEmployeeNumber(employeeNumber); // 设置到 Papers 对象中
-        paperService.createPaper(paper);
-        return "试卷创建成功";
+        paperService.createPaper(paper); // 在这里调用服务层，MyBatis 会将生成的 ID 填充到 paper 对象中
+        return paper; // 返回包含新试卷信息的对象
     }
+
 
     // 智能组卷
     @PostMapping("/{paperId}/auto-generate")
