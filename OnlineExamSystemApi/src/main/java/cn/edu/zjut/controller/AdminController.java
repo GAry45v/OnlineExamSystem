@@ -68,7 +68,7 @@ public class AdminController {
         }
     }
     @PostMapping("/teacher/add")
-    public ResponseResult<?> addTeacher(Teacher teacher) {
+    public ResponseResult<?> addTeacher(@RequestBody Teacher teacher) {
         if (teacher == null || teacher.getName() == null || teacher.getEmployeeNumber() == null) {
             return ResponseResult.error("教师信息不完整，添加失败！");
         }
