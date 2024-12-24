@@ -49,6 +49,7 @@ public class UserServiceImpl implements UserService {
 
         // 根据角色选择查询 Teacher 或 Student 表
         boolean exists = false;
+        System.out.println(user.getRoleId());
         if (user.getRoleId() == 1) { // 教师角色
             exists = userMapper.checkTeacherExist(user.getUserNumber(), schoolId);
         } else if (user.getRoleId() == 2) { // 学生角色
@@ -56,7 +57,7 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new RuntimeException("Invalid role");
         }
-
+        System.out.println(exists);
         // 如果对应角色的信息存在，更新 User 表
         if (exists) {
             user.setSchoolId(schoolId);

@@ -106,6 +106,13 @@ public class PapersController {
                                      @RequestPart("fileMetadata") String fileMetadataJson, // 新增文件元数据 JSON
                                      @RequestParam("marks") int marks) { // 增加单题分数参数
         try {
+            System.out.println("Received request to add question:");
+            System.out.println("Paper ID: {}"+paperId);
+            System.out.println("Question Bank ID: {}"+questionBankId);
+            System.out.println("Question: {}"+question);
+            System.out.println("Files count: {}"+ files != null ? files.size() : 0);
+            System.out.println("File metadata: {}"+fileMetadataJson);
+            System.out.println("Marks: {}"+marks);
             // 从 Token 中获取教师编号
             JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
             String employeeNumber = authentication.getUserNumber();

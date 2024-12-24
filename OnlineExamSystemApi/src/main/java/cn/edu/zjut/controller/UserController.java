@@ -43,6 +43,7 @@ public class UserController {
 
         User user = objectMapper.convertValue(requestData.get("user"), User.class);
         String schoolname =(String)requestData.get("schoolname");
+        System.out.println(schoolname);
         try {
             // 调用 Service 层的绑定方法
             userService.bindUserInfo(user,schoolname);

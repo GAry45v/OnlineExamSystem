@@ -14,5 +14,5 @@ public interface ExamService {
     Exam findExamById(int examId);
 
     void publishExamToStudent(StudentExam studentExam);
-    List<Exam> findPendingExams();
+//    List<Exam> findPendingExams();
 }
