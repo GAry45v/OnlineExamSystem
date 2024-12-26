@@ -7,4 +7,6 @@ import lombok.Data;
 public class AnswerPaperDTO {
     private Questions question_bone;
     private String answerContent;
+    private String Aimark;
+    private String Aicomment;
 }
