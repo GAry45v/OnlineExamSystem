@@ -1,5 +1,6 @@
 package cn.edu.zjut.mapper;
 
+import cn.edu.zjut.DTO.ExamPaperDTO;
 import cn.edu.zjut.entity.Exam;
 import org.apache.ibatis.annotations.*;
 
@@ -26,6 +27,15 @@ public interface ExamMapper {
 
         @Select("SELECT * FROM Exam WHERE examId = #{examId}")
         Exam findExamById(@Param("examId") int examId);
+
+        @Select("SELECT se.examId, se.studentNumber, s.name, p.questionBankId " +
+                "FROM StudentExam se " +
+                "JOIN Student s ON se.studentNumber = s.studentNumber " +
+                "JOIN Exam e ON se.examId = e.examId " +
+                "JOIN Papers p ON e.paperId = p.paperId " +
+                "WHERE se.examId = #{examId} AND se.status = '待批阅'")
+        List<ExamPaperDTO> findPendingPaperByExamId(@Param("examId") int examId);
+
     }
 
 

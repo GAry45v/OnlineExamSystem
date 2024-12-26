@@ -70,7 +70,7 @@ public class FaceController {
                 return Results.newFailedResult("file is null");
             }
             if (faceId == null) {
-                return Results.newFailedResult("groupId is null");
+                return Results.newFailedResult("faceId is null");
             }
             if (name == null) {
                 return Results.newFailedResult("name is null");

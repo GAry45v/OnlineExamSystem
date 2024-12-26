@@ -1,5 +1,7 @@
 package cn.edu.zjut.service;
 
+import cn.edu.zjut.DTO.AnswerPaperDTO;
+import cn.edu.zjut.DTO.ExamPaperDTO;
 import cn.edu.zjut.entity.Exam;
 import cn.edu.zjut.entity.StudentExam;
 
@@ -15,4 +17,8 @@ public interface ExamService {
 
     void publishExamToStudent(StudentExam studentExam);
     List<Exam> findPendingExams();
+
+    List<ExamPaperDTO> findPaperbyexamId(int examId);
+
+    List<AnswerPaperDTO> getAnswerPaperByStudentExamId(int studentExamId,String bankid);
 }

@@ -1,8 +1,12 @@
 package cn.edu.zjut.controller;
+import cn.edu.zjut.DTO.AnswerPaperDTO;
+import cn.edu.zjut.DTO.ExamPaperDTO;
 import cn.edu.zjut.config.JwtAuthenticationToken;
 import cn.edu.zjut.entity.Exam;
 import cn.edu.zjut.entity.ExamDTO;
 import cn.edu.zjut.service.ExamService;
+import cn.edu.zjut.vo.ResponseResult;
+import com.beust.jcommander.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -70,6 +74,34 @@ public class ExamController {
             return "考试删除成功";
         } catch (Exception e) {
             return "考试删除失败：" + e.getMessage();
+        }
+    }
+    @PostMapping("/getStudentexamIdby{examId}")
+    public ResponseResult<List<ExamPaperDTO>> getExamPapers(@PathVariable int examId) {
+        try {
+            // 调用Service层获取考试信息
+            List<ExamPaperDTO> examPapers = examService.findPaperbyexamId(examId);
+
+            // 如果没有找到考试信息
+            if (examPapers == null || examPapers.isEmpty()) {
+                return ResponseResult.error(404, "No exam information found for the given examId.");
+            }
+
+            // 返回成功的结果
+            return ResponseResult.success("Exam information retrieved successfully.", examPapers);
+
+        } catch (Exception e) {
+            // 异常处理
+            return ResponseResult.error("An error occurred while retrieving exam information: " + e.getMessage());
+        }
+    }
+    @PostMapping("/getStudentAnswerPaper/{studentExamId}")
+    public ResponseResult<List<AnswerPaperDTO>> getAnswerPaper(@PathVariable int studentExamId, @RequestParam String bankid) {
+        try {
+            List<AnswerPaperDTO> answerPaper = examService.getAnswerPaperByStudentExamId(studentExamId,bankid);
+            return ResponseResult.success(answerPaper);
+        } catch (Exception e) {
+            return ResponseResult.error("Error retrieving answer paper: " + e.getMessage());
         }
     }
 }

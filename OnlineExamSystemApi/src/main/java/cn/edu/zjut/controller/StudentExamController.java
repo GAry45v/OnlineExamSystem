@@ -57,7 +57,7 @@ public class StudentExamController {
             examDTO.setDurationMinutes(exam.getDurationMinutes());
             examDTO.setAntiCheatingEnabled(exam.isisAntiCheatingEnabled());
             examDTO.setExamStatus(studentExam.getStatus()); // 学生考试状态
-
+            examDTO.setEndTime(String.valueOf(exam.getEndTime()));
             // 设置教师信息
             if (teacher != null) {
                 examDTO.setTeacherName(teacher.getName());
@@ -113,7 +113,7 @@ public class StudentExamController {
             }
 
             // 更新学生考试状态为已完成
-            studentExamService.updateExamStatus(examId, "已完成");
+            studentExamService.updateExamStatus(examId, "待批阅");
 
             return "交卷成功！";
         } catch (Exception e) {
