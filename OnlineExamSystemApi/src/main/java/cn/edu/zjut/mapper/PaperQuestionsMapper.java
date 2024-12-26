@@ -19,4 +19,7 @@ public interface PaperQuestionsMapper {
     //删除某张试卷的所有题目记录
     @Delete("DELETE FROM PaperQuestions WHERE paperQuestionId = #{paperQuestionId}")
     void deleteQuestionFromPaper(@Param("paperQuestionId") int paperQuestionId);
+
+    @Select("SELECT * FROM PaperQuestions WHERE paperQuestionId = #{paperQuestionId}")
+    PaperQuestions findPaperQuestionById(int paperQuestionId);
 }

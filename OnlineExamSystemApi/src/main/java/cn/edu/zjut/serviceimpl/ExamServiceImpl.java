@@ -1,20 +1,27 @@
 package cn.edu.zjut.serviceimpl;
 
+import cn.edu.zjut.DTO.AnswerPaperDTO;
+import cn.edu.zjut.DTO.ExamPaperDTO;
 import cn.edu.zjut.entity.*;
-import cn.edu.zjut.mapper.ExamMapper;
-import cn.edu.zjut.mapper.PapersMapper;
-import cn.edu.zjut.mapper.StudentExamMapper;
-import cn.edu.zjut.mapper.TeacherMapper;
+import cn.edu.zjut.mapper.*;
 import cn.edu.zjut.service.ExamService;
+import cn.edu.zjut.service.QuestionBankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class ExamServiceImpl implements ExamService {
+    @Autowired
+    private QuestionBankService questionBankService;
+    @Autowired
+    private PaperQuestionsMapper paperQuestionsMapper;
 
+    @Autowired
+    private StudentAnswerAndGradingMapper studentAnswerAndGradingMapper;
     @Autowired
     private ExamMapper examMapper;
 
@@ -81,6 +88,54 @@ public class ExamServiceImpl implements ExamService {
     public void publishExamToStudent(StudentExam studentExam) {
         studentExamMapper.insertStudentExam(studentExam);
     }
+
+    @Override
+    public List<Exam> findPendingExams() {
+        return null;
+    }
+
+    @Override
+    public List<ExamPaperDTO> findPaperbyexamId(int examId) {
+        return examMapper.findPendingPaperByExamId(examId);
+    }
+
+
+    @Override
+    public List<AnswerPaperDTO> getAnswerPaperByStudentExamId(int studentExamId,String bankid) {
+        List<StudentAnswerAndGrading> studentAnswers = studentAnswerAndGradingMapper.findAnswersByStudentExamId(studentExamId);
+        if (studentAnswers.isEmpty()) {
+            throw new RuntimeException("No answers found for studentExamId: " + studentExamId);
+        }
+        List<AnswerPaperDTO> result = new ArrayList<>();
+        for (StudentAnswerAndGrading answer : studentAnswers) {
+            int paperQuestionId = answer.getPaperQuestionId();
+
+            // Query PaperQuestions table to get the questionId
+            PaperQuestions paperQuestion = paperQuestionsMapper.findPaperQuestionById(paperQuestionId);
+
+            if (paperQuestion == null) {
+                throw new RuntimeException("Paper question not found for paperQuestionId: " + paperQuestionId);
+            }
+            String questionId = paperQuestion.getQuestionId();
+
+            // Use QuestionBankService to fetch detailed question data from MongoDB
+            Questions question = questionBankService.findQuestionByBankIdAndQuestionId(bankid,questionId);
+
+            if (question == null) {
+                throw new RuntimeException("Question not found for questionId: " + questionId);
+            }
+
+            // Create AnswerPaperDTO and populate data
+            AnswerPaperDTO answerPaperDTO = new AnswerPaperDTO();
+            answerPaperDTO.setQuestion_bone(question);
+            answerPaperDTO.setAnswerContent(answer.getAnswerContent());
+
+            result.add(answerPaperDTO);
+        }
+
+        return result;
+    }
+
     @Override
     public Exam findExamById(int examId) {
         Exam exam = examMapper.findExamById(examId);
