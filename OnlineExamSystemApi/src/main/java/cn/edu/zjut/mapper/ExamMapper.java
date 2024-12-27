@@ -28,7 +28,7 @@ public interface ExamMapper {
         @Select("SELECT * FROM Exam WHERE examId = #{examId}")
         Exam findExamById(@Param("examId") int examId);
 
-        @Select("SELECT se.examId, se.studentNumber, s.name, p.questionBankId " +
+        @Select("SELECT se.studentExamId, se.studentNumber, s.name, p.questionBankId " +
                 "FROM StudentExam se " +
                 "JOIN Student s ON se.studentNumber = s.studentNumber " +
                 "JOIN Exam e ON se.examId = e.examId " +
