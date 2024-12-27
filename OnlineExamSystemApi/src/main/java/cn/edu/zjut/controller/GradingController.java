@@ -28,19 +28,19 @@ public class GradingController {
     private StudentAnswerService studentAnswerService;
 
     // 查询待批阅的考试
-    @GetMapping("/pending-exams")
-    public List<PendingExamDTO> getPendingExams() {
-        List<Exam> exams = examService.findPendingExams();
-        return exams.stream().map(exam -> {
-            PendingExamDTO dto = new PendingExamDTO();
-            dto.setExamId(exam.getExamId());
-            dto.setExamName(exam.getExamName());
-            dto.setExamStatus(exam.getExamStatus());
-            dto.setStartTime(exam.getStartTime());
-            dto.setEndTime(exam.getEndTime());
-            return dto;
-        }).collect(Collectors.toList());
-    }
+//    @GetMapping("/pending-exams")
+//    public List<PendingExamDTO> getPendingExams() {
+//        List<Exam> exams = examService.findPendingExams();
+//        return exams.stream().map(exam -> {
+//            PendingExamDTO dto = new PendingExamDTO();
+//            dto.setExamId(exam.getExamId());
+//            dto.setExamName(exam.getExamName());
+//            dto.setExamStatus(exam.getExamStatus());
+//            dto.setStartTime(exam.getStartTime());
+//            dto.setEndTime(exam.getEndTime());
+//            return dto;
+//        }).collect(Collectors.toList());
+//    }
 
     // 查询某场考试的所有学生待批阅试卷
     @GetMapping("/{examId}/pending-student-papers")
