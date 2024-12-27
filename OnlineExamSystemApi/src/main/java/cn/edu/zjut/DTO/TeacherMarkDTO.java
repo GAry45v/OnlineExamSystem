@@ -4,10 +4,9 @@ import cn.edu.zjut.entity.Questions;
 import lombok.Data;
 
 @Data
-public class AnswerPaperDTO {
+public class TeacherMarkDTO {
     private Questions question_bone;
-    private String answerContent;
-    private String Aimark;
-    private String Aicomment;
+    private String teachermark;
+    private String teachercomment;
     private int paperId;
 }

@@ -35,6 +35,13 @@ public interface ExamMapper {
                 "JOIN Papers p ON e.paperId = p.paperId " +
                 "WHERE se.examId = #{examId} AND se.status = '待批阅'")
         List<ExamPaperDTO> findPendingPaperByExamId(@Param("examId") int examId);
+        @Select("""
+        SELECT e.paperId
+        FROM Exam e
+        JOIN StudentExam se ON e.examId = se.examId
+        WHERE se.studentExamId = #{studentExamId}
+    """)
+        Integer getPaperIdByStudentExamId(@Param("studentExamId") int studentExamId);
 
     }
 

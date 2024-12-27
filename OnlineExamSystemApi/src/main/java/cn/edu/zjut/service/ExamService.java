@@ -2,6 +2,7 @@ package cn.edu.zjut.service;
 
 import cn.edu.zjut.DTO.AnswerPaperDTO;
 import cn.edu.zjut.DTO.ExamPaperDTO;
+import cn.edu.zjut.DTO.TeacherMarkDTO;
 import cn.edu.zjut.entity.Exam;
 import cn.edu.zjut.entity.StudentExam;
 
@@ -21,4 +22,6 @@ public interface ExamService {
     List<ExamPaperDTO> findPaperbyexamId(int examId);
 
     List<AnswerPaperDTO> getAnswerPaperByStudentExamId(int studentExamId,String bankid);
+
+    public void updateTeacherMarks(int studentExamId, List<TeacherMarkDTO> teacherMarkDTOList,String teachernumber);
 }

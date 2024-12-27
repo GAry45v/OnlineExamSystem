@@ -2,6 +2,7 @@ package cn.edu.zjut.serviceimpl;
 
 import cn.edu.zjut.DTO.AnswerPaperDTO;
 import cn.edu.zjut.DTO.ExamPaperDTO;
+import cn.edu.zjut.DTO.TeacherMarkDTO;
 import cn.edu.zjut.entity.*;
 import cn.edu.zjut.mapper.*;
 import cn.edu.zjut.service.ExamService;
@@ -102,6 +103,7 @@ public class ExamServiceImpl implements ExamService {
 
     @Override
     public List<AnswerPaperDTO> getAnswerPaperByStudentExamId(int studentExamId,String bankid) {
+        int paperId=examMapper.getPaperIdByStudentExamId(studentExamId);
         List<StudentAnswerAndGrading> studentAnswers = studentAnswerAndGradingMapper.findAnswersByStudentExamId(studentExamId);
         if (studentAnswers.isEmpty()) {
             throw new RuntimeException("No answers found for studentExamId: " + studentExamId);
@@ -129,11 +131,27 @@ public class ExamServiceImpl implements ExamService {
             AnswerPaperDTO answerPaperDTO = new AnswerPaperDTO();
             answerPaperDTO.setQuestion_bone(question);
             answerPaperDTO.setAnswerContent(answer.getAnswerContent());
-
+            answerPaperDTO.setPaperId(paperId);
             result.add(answerPaperDTO);
         }
 
         return result;
+    }
+
+    @Override
+    public void updateTeacherMarks(int studentExamId, List<TeacherMarkDTO> teacherMarkDTOList,String graderEmployeeNumber) {
+        for (TeacherMarkDTO markDTO : teacherMarkDTOList) {
+            String questionId = markDTO.getQuestion_bone().getQuestionId();
+            int paperId=markDTO.getPaperId();
+            // 从 PaperQuestions 表中查找 paperQuestionId
+            Integer paperQuestionId = paperQuestionsMapper.findPaperQuestionIdByQuestionId(questionId,paperId);
+            if (paperQuestionId == null) {
+                throw new RuntimeException("Invalid questionId: " + questionId);
+            }
+            System.out.println(markDTO.getTeachermark()+markDTO.getTeachermark());
+            // 更新 StudentAnswerAndGrading 表
+            studentAnswerAndGradingMapper.teacher_updateStudentAnswerAndGrading(studentExamId, paperQuestionId, markDTO.getTeachermark(), markDTO.getTeachercomment(), graderEmployeeNumber);
+        }
     }
 
     @Override
@@ -144,5 +162,6 @@ public class ExamServiceImpl implements ExamService {
         }
         return exam;
     }
+
 
 }

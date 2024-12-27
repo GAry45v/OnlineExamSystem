@@ -1,6 +1,7 @@
 package cn.edu.zjut.controller;
 import cn.edu.zjut.DTO.AnswerPaperDTO;
 import cn.edu.zjut.DTO.ExamPaperDTO;
+import cn.edu.zjut.DTO.TeacherMarkDTO;
 import cn.edu.zjut.config.JwtAuthenticationToken;
 import cn.edu.zjut.entity.Exam;
 import cn.edu.zjut.entity.ExamDTO;
@@ -104,4 +105,18 @@ public class ExamController {
             return ResponseResult.error("Error retrieving answer paper: " + e.getMessage());
         }
     }
+
+    @PostMapping("/update_teachermark/{studentExamId}")
+    public ResponseResult<String> update_teachermark(@PathVariable int studentExamId, @RequestBody List<TeacherMarkDTO> teacherMarkDTOList){
+        try {
+            JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+            String teacherNumber = authentication.getUserNumber();
+            examService.updateTeacherMarks(studentExamId, teacherMarkDTOList,teacherNumber);
+            return ResponseResult.success("Teacher marks updated successfully!");
+        } catch (Exception e) {
+            return ResponseResult.error("Failed to update teacher marks: " + e.getMessage());
+        }
+    }
+
 }
+

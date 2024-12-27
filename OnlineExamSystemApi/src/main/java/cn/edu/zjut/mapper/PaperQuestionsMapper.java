@@ -22,4 +22,6 @@ public interface PaperQuestionsMapper {
 
     @Select("SELECT * FROM PaperQuestions WHERE paperQuestionId = #{paperQuestionId}")
     PaperQuestions findPaperQuestionById(int paperQuestionId);
+    @Select("SELECT paperQuestionId FROM PaperQuestions WHERE questionId = #{questionId} And paperId = #{paperId}")
+    Integer findPaperQuestionIdByQuestionId(@Param("questionId") String questionId,@Param("paperId")int paperId);
 }
