@@ -133,13 +133,22 @@ public class ExamServiceImpl implements ExamService {
             if (question == null) {
                 throw new RuntimeException("Question not found for questionId: " + questionId);
             }
-            String content=question.getContent();
-            int mark=paperQuestion.getMarks();
-            String prompt="现在你是阅卷老师，这道题目的满分为:"+mark+"题干为："+content+"。请给出该答案的得分和评语"+answer.getAnswerContent()+"给出的内容按照 得分： 评价： ";
-            String aianswer = model.generate(prompt);
-            System.out.println(aianswer);
-            // Create AnswerPaperDTO and populate data
+
             AnswerPaperDTO answerPaperDTO = new AnswerPaperDTO();
+            String type=paperQuestion.getQuestionType();
+            if(type.equals("简答题")){
+                String content=question.getContent();
+                int mark=paperQuestion.getMarks();
+                String prompt="现在你是阅卷老师，这道题目的满分为:"+mark+"题干为："+content+"。请给出该答案的得分和评语"+answer.getAnswerContent()+"给出的内容按照 得分： 评价： ";
+                String aianswer = model.generate(prompt);
+                System.out.println(aianswer);
+                answerPaperDTO.setAicomment(aianswer);
+            }else {
+                answerPaperDTO.setAnswerContent("null");
+            }
+
+            // Create AnswerPaperDTO and populate data
+
             answerPaperDTO.setQuestion_bone(question);
             answerPaperDTO.setAnswerContent(answer.getAnswerContent());
             answerPaperDTO.setPaperId(paperId);
