@@ -31,4 +31,7 @@ public interface StudentExamMapper {
             "SET status = #{status}, score = #{score} " +
             "WHERE studentExamId = #{studentExamId};")
     void updateExamStatusAndScore(int studentExamId, String status, BigDecimal score);
+
+    @Update("UPDATE StudenStudentExam SET aicomment=#{aicomment} WHERE studentExamId = #{studentExamId} AND paperQuestionId=#{paperQuestionId};")
+    void updateaicomment(int studentExamId,int paperQuestionId,String aicomment);
 }

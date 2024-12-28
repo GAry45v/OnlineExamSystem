@@ -2,8 +2,11 @@ package cn.edu.zjut.controller;
 
 import cn.edu.zjut.config.JwtAuthenticationToken;
 import cn.edu.zjut.entity.*;
+import cn.edu.zjut.mapper.PaperQuestionsMapper;
+import cn.edu.zjut.mapper.StudentExamMapper;
 import cn.edu.zjut.mapper.TeacherMapper;
 import cn.edu.zjut.service.*;
+import dev.langchain4j.community.model.qianfan.QianfanChatModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +19,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/student/exams")
 public class StudentExamController {
+    @Autowired
+    private StudentExamMapper studentExamMapper;
 
+    @Autowired
+    private PaperQuestionsMapper paperQuestionsMapper;
     @Autowired
     private StudentExamService studentExamService;
 
@@ -105,11 +112,26 @@ public class StudentExamController {
     @PostMapping("/{examId}/submit")
     public String submitExamAnswers(@PathVariable int examId, @RequestBody List<StudentAnswerAndGrading> answers) {
         try {
+            QianfanChatModel model = QianfanChatModel.builder()
+                .apiKey("lL8p3Rm75yzLGHqlyDjZ809S")
+                .secretKey("TlZrivfttBAnkLI2BepyVg9hrj6snOHp")
+                .modelName("Yi-34B-Chat") // 一个免费的模型名称
+                .build();
             // 遍历答案列表，保存到数据库
             for (StudentAnswerAndGrading answer : answers) {
                 answer.setAnswerStatus("已提交");
                 answer.setGradingTime(Timestamp.from(Instant.now())); // 设置提交时间
                 studentAnswerService.saveAnswer(answer);
+
+                int paperQuestionId = answer.getPaperQuestionId();
+                PaperQuestions paperQuestion = paperQuestionsMapper.findPaperQuestionById(paperQuestionId);
+                if(!(answer.getContent().isEmpty()||answer.getContent().equals("null"))){
+                    String content=answer.getContent();
+                    int mark=paperQuestion.getMarks();
+                    String prompt="现在你是阅卷老师，这道题目的满分为:"+mark+"题干为："+content+"。请给出该答案的得分和评语"+answer.getAnswerContent()+"给出的内容按照 得分： 评价： ";
+                    String aianswer = model.generate(prompt);
+                    studentExamMapper.updateaicomment(answer.getStudentExamId(),paperQuestionId,aianswer);
+                }
             }
 
             // 更新学生考试状态为已完成

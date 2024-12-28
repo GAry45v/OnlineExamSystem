@@ -105,11 +105,11 @@ public class ExamServiceImpl implements ExamService {
 
     @Override
     public List<AnswerPaperDTO> getAnswerPaperByStudentExamId(int studentExamId,String bankid) {
-        QianfanChatModel model = QianfanChatModel.builder()
-                .apiKey("lL8p3Rm75yzLGHqlyDjZ809S")
-                .secretKey("TlZrivfttBAnkLI2BepyVg9hrj6snOHp")
-                .modelName("Yi-34B-Chat") // 一个免费的模型名称
-                .build();
+//        QianfanChatModel model = QianfanChatModel.builder()
+//                .apiKey("lL8p3Rm75yzLGHqlyDjZ809S")
+//                .secretKey("TlZrivfttBAnkLI2BepyVg9hrj6snOHp")
+//                .modelName("Yi-34B-Chat") // 一个免费的模型名称
+//                .build();
         int paperId=examMapper.getPaperIdByStudentExamId(studentExamId);
         List<StudentAnswerAndGrading> studentAnswers = studentAnswerAndGradingMapper.findAnswersByStudentExamId(studentExamId);
         if (studentAnswers.isEmpty()) {
@@ -136,16 +136,16 @@ public class ExamServiceImpl implements ExamService {
 
             AnswerPaperDTO answerPaperDTO = new AnswerPaperDTO();
             String type=paperQuestion.getQuestionType();
-            if(type.equals("简答题")){
-                String content=question.getContent();
-                int mark=paperQuestion.getMarks();
-                String prompt="现在你是阅卷老师，这道题目的满分为:"+mark+"题干为："+content+"。请给出该答案的得分和评语"+answer.getAnswerContent()+"给出的内容按照 得分： 评价： ";
-                String aianswer = model.generate(prompt);
-                System.out.println(aianswer);
-                answerPaperDTO.setAicomment(aianswer);
-            }else {
-                answerPaperDTO.setAnswerContent("null");
-            }
+//            if(type.equals("简答题")){
+//                String content=question.getContent();
+//                int mark=paperQuestion.getMarks();
+//                String prompt="现在你是阅卷老师，这道题目的满分为:"+mark+"题干为："+content+"。请给出该答案的得分和评语"+answer.getAnswerContent()+"给出的内容按照 得分： 评价： ";
+//                String aianswer = model.generate(prompt);
+//                System.out.println(aianswer);
+//                answerPaperDTO.setAicomment(aianswer);
+//            }else {
+//                answerPaperDTO.setAnswerContent("null");
+//            }
 
             // Create AnswerPaperDTO and populate data
 

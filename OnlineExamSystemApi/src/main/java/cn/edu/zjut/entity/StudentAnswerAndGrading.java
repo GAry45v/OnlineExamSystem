@@ -13,6 +13,26 @@ public class StudentAnswerAndGrading {
     private String comments;
     private String answerStatus;
 
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setAicomment(String aicomment) {
+        this.aicomment = aicomment;
+    }
+
+
+    public String getContent() {
+        return content;
+    }
+
+    public String getAicomment() {
+        return aicomment;
+    }
+
+    private String content;
+    private String aicomment;
+
     // Getters and Setters
     public int getAnswerId() {
         return answerId;
