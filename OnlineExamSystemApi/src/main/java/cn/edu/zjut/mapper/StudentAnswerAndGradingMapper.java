@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Mapper
@@ -20,7 +21,7 @@ public interface StudentAnswerAndGradingMapper {
     void teacher_updateStudentAnswerAndGrading(
             @Param("studentExamId") int studentExamId,
             @Param("paperQuestionId") int paperQuestionId,
-            @Param("score") String score,
+            @Param("score") BigDecimal score,
             @Param("comments") String comments,
             @Param("graderEmployeeNumber") String graderEmployeeNumber
     );

@@ -3,6 +3,7 @@ package cn.edu.zjut.mapper;
 import cn.edu.zjut.entity.StudentExam;
 import org.apache.ibatis.annotations.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Mapper
@@ -26,4 +27,8 @@ public interface StudentExamMapper {
 
     @Update("UPDATE StudentExam SET status = #{status} WHERE examId = #{examId} AND studentNumber = #{studentNumber}")
     void updateExamStatusForStudent(@Param("examId") int examId, @Param("studentNumber") String studentNumber, @Param("status") String status);
+    @Update("UPDATE StudentExam " +
+            "SET status = #{status}, score = #{score} " +
+            "WHERE studentExamId = #{studentExamId};")
+    void updateExamStatusAndScore(int studentExamId, String status, BigDecimal score);
 }

@@ -10,6 +10,7 @@ import cn.edu.zjut.service.QuestionBankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -140,6 +141,7 @@ public class ExamServiceImpl implements ExamService {
 
     @Override
     public void updateTeacherMarks(int studentExamId, List<TeacherMarkDTO> teacherMarkDTOList,String graderEmployeeNumber) {
+        BigDecimal totalScore = BigDecimal.ZERO;
         for (TeacherMarkDTO markDTO : teacherMarkDTOList) {
             String questionId = markDTO.getQuestion_bone().getQuestionId();
             int paperId=markDTO.getPaperId();
@@ -148,10 +150,11 @@ public class ExamServiceImpl implements ExamService {
             if (paperQuestionId == null) {
                 throw new RuntimeException("Invalid questionId: " + questionId);
             }
-            System.out.println(markDTO.getTeachermark()+markDTO.getTeachermark());
             // 更新 StudentAnswerAndGrading 表
             studentAnswerAndGradingMapper.teacher_updateStudentAnswerAndGrading(studentExamId, paperQuestionId, markDTO.getTeachermark(), markDTO.getTeachercomment(), graderEmployeeNumber);
+            totalScore = totalScore.add(markDTO.getTeachermark());
         }
+        studentExamMapper.updateExamStatusAndScore(studentExamId, "已批阅", totalScore);
     }
 
     @Override
