@@ -1,7 +1,7 @@
 package cn.edu.zjut.service;
 
 import cn.edu.zjut.entity.Student;
-import cn.edu.zjut.entity.StudentDTO;
+import cn.edu.zjut.DTO.StudentDTO;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package cn.edu.zjut.serviceimpl;
 
 import cn.edu.zjut.controller.QuestionBankController;
-import cn.edu.zjut.entity.PaperQuestionDTO;
+import cn.edu.zjut.DTO.PaperQuestionDTO;
 import cn.edu.zjut.entity.Papers;
 import cn.edu.zjut.entity.PaperQuestions;
 import cn.edu.zjut.entity.Questions;

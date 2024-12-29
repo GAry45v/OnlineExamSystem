@@ -1,5 +1,6 @@
 package cn.edu.zjut.controller;
 
+import cn.edu.zjut.DTO.ExamDTO;
 import cn.edu.zjut.config.JwtAuthenticationToken;
 import cn.edu.zjut.entity.*;
 import cn.edu.zjut.mapper.PaperQuestionsMapper;
@@ -50,14 +51,15 @@ public class StudentExamController {
 
         for (StudentExam studentExam : studentExams) {
             // 根据 examId 查询 Exam 信息
+            Integer studentExamId = studentExam.getStudentExamId();
             Exam exam = examService.findExamById(studentExam.getExamId());
-
 
             Teacher teacher = teacherMapper.findTeacherByEmployeeNumber(exam.getCreatedByEmployeeNumber());
 
             // 构造 ExamDTO
             ExamDTO examDTO = new ExamDTO();
             examDTO.setExamId(exam.getExamId());
+            examDTO.setStudentExamId(studentExamId);
             examDTO.setExamName(exam.getExamName());
             examDTO.setCreatedByEmployeeNumber(exam.getCreatedByEmployeeNumber());
             examDTO.setStartTime(exam.getStartTime().toString());
@@ -112,34 +114,95 @@ public class StudentExamController {
     @PostMapping("/{examId}/submit")
     public String submitExamAnswers(@PathVariable int examId, @RequestBody List<StudentAnswerAndGrading> answers) {
         try {
+            // 首先检查接收到的数据
+            System.out.println("收到的考试ID: " + examId);
+            System.out.println("答案列表大小: " + answers.size());
+
             QianfanChatModel model = QianfanChatModel.builder()
-                .apiKey("lL8p3Rm75yzLGHqlyDjZ809S")
-                .secretKey("TlZrivfttBAnkLI2BepyVg9hrj6snOHp")
-                .modelName("Yi-34B-Chat") // 一个免费的模型名称
-                .build();
-            // 遍历答案列表，保存到数据库
+                    .apiKey("lL8p3Rm75yzLGHqlyDjZ809S")
+                    .secretKey("TlZrivfttBAnkLI2BepyVg9hrj6snOHp")
+                    .modelName("Yi-34B-Chat")
+                    .build();
+
             for (StudentAnswerAndGrading answer : answers) {
+                // 打印每个答案的详细信息
+                System.out.println("处理答案 ID: " + answer.getPaperQuestionId());
+                System.out.println("题干内容: " + answer.getContent());
+                System.out.println("学生答案: " + answer.getAnswerContent());
+
                 answer.setAnswerStatus("已提交");
-                answer.setGradingTime(Timestamp.from(Instant.now())); // 设置提交时间
-                studentAnswerService.saveAnswer(answer);
+                answer.setGradingTime(Timestamp.from(Instant.now()));
+
+                try {
+                    studentAnswerService.saveAnswer(answer);
+                    System.out.println("答案保存成功");
+                } catch (Exception e) {
+                    System.out.println("答案保存失败: " + e.getMessage());
+                }
 
                 int paperQuestionId = answer.getPaperQuestionId();
                 PaperQuestions paperQuestion = paperQuestionsMapper.findPaperQuestionById(paperQuestionId);
-                if(!(answer.getContent().isEmpty()||answer.getContent().equals("null"))){
-                    String content=answer.getContent();
-                    int mark=paperQuestion.getMarks();
-                    String prompt="现在你是阅卷老师，这道题目的满分为:"+mark+"题干为："+content+"。请给出该答案的得分和评语"+answer.getAnswerContent()+"给出的内容按照 得分： 评价： ";
+
+                if (paperQuestion == null) {
+                    System.out.println("未找到试题信息: " + paperQuestionId);
+                    continue;
+                }
+
+                // 检查内容是否为空的逻辑优化
+                String content = answer.getContent();
+                if (content == null || content.trim().isEmpty() || "null".equals(content)) {
+                    System.out.println("题目内容为空，跳过AI评分");
+                    continue;
+                }
+
+                try {
+                    int mark = paperQuestion.getMarks();
+                    String prompt = String.format("""
+                            你现在是一位专业的阅卷老师，请根据以下信息进行评分：
+                            题目满分：%d分
+                            题目内容：%s
+                            学生答案：%s
+                            
+                            请严格按照以下格式输出评分结果：
+                            得分：[数字]
+                            评价：[具体评价内容]
+                            """,
+                            mark,
+                            content,
+                            answer.getAnswerContent()
+                    );
+                    System.out.println("发送给AI的prompt: " + prompt);
+
                     String aianswer = model.generate(prompt);
-                    studentExamMapper.updateaicomment(answer.getStudentExamId(),paperQuestionId,aianswer);
+                    System.out.println("AI返回结果: " + aianswer);
+
+                    if (aianswer != null && !aianswer.trim().isEmpty()) {
+                        studentExamMapper.updateaicomment(
+                                answer.getStudentExamId(),
+                                paperQuestionId,
+                                aianswer
+                        );
+                        System.out.println("AI评分保存成功");
+                    }
+                } catch (Exception e) {
+                    System.out.println("AI评分处理失败: " + e.getMessage());
+                    e.printStackTrace();
                 }
             }
 
-            // 更新学生考试状态为已完成
-            studentExamService.updateExamStatus(examId, "待批阅");
+            // 更新考试状态
+            try {
+                studentExamService.updateExamStatus(examId, "待批阅");
+                System.out.println("考试状态更新成功");
+            } catch (Exception e) {
+                System.out.println("考试状态更新失败: " + e.getMessage());
+            }
 
             return "交卷成功！";
         } catch (Exception e) {
+            e.printStackTrace();
             return "交卷失败：" + e.getMessage();
         }
     }
+
 }

@@ -1,5 +1,7 @@
 package cn.edu.zjut.controller;
 
+import cn.edu.zjut.DTO.AutoGeneratePaperDTO;
+import cn.edu.zjut.DTO.PaperQuestionDTO;
 import cn.edu.zjut.config.JwtAuthenticationToken;
 import cn.edu.zjut.entity.*;
 import cn.edu.zjut.service.PaperService;
@@ -15,7 +17,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/papers")
 public class PapersController {
@@ -55,7 +57,7 @@ public class PapersController {
     @PostMapping("/{paperId}/auto-generate")
     public String autoGeneratePaper(@PathVariable int paperId,
                                     @RequestParam String questionBankId,
-                                    @RequestBody cn.edu.zjut.entity.AutoGeneratePaperDTO autoGeneratePaperDTO) {
+                                    @RequestBody AutoGeneratePaperDTO autoGeneratePaperDTO) {
         try {
             // 从 DTO 中获取参数
             Map<String, Integer> questionTypeCount = autoGeneratePaperDTO.getQuestionTypeCount();

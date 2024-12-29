@@ -1,4 +1,4 @@
-package cn.edu.zjut.entity;
+package cn.edu.zjut.DTO;
 
 public class StudentTeachingClassDTO {
     private Integer teachingClassId;

@@ -1,7 +1,6 @@
 package cn.edu.zjut.mapper;
 
-import cn.edu.zjut.entity.StudentTeachingClass;
-import cn.edu.zjut.entity.StudentTeachingClassDTO;
+import cn.edu.zjut.DTO.StudentTeachingClassDTO;
 import org.apache.ibatis.annotations.*;
 
 import java.sql.Timestamp;

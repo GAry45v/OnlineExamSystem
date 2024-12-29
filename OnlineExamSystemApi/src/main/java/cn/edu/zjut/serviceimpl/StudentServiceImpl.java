@@ -1,8 +1,7 @@
 package cn.edu.zjut.serviceimpl;
 
-import cn.edu.zjut.entity.College;
 import cn.edu.zjut.entity.Student;
-import cn.edu.zjut.entity.StudentDTO;
+import cn.edu.zjut.DTO.StudentDTO;
 import cn.edu.zjut.mapper.*;
 import cn.edu.zjut.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;

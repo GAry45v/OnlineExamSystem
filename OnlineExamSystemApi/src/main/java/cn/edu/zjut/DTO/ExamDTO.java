@@ -1,7 +1,8 @@
-package cn.edu.zjut.entity;
+package cn.edu.zjut.DTO;
 
 public class ExamDTO {
     private int examId;
+    private int studentExamId;
     private String examName;
     private String createdByEmployeeNumber;
     private String startTime;
@@ -17,6 +18,10 @@ public class ExamDTO {
     // Getters and Setters
 
     // Getters and Setters
+    public Integer getStudentExamId() { return studentExamId; }
+    public void setStudentExamId(Integer studentExamId){
+        this.studentExamId = studentExamId;
+    }
     public String getEndTime() {
         return endTime;
     }

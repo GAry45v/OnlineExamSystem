@@ -1,7 +1,6 @@
 package cn.edu.zjut.controller;
 
 import cn.edu.zjut.config.JwtAuthenticationToken;
-import cn.edu.zjut.entity.StudentTeachingClassDTO;
 import cn.edu.zjut.entity.Teacher;
 import cn.edu.zjut.entity.TeacherTeachingClass;
 import cn.edu.zjut.entity.TeachingClass;

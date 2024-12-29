@@ -13,6 +13,9 @@ public class StudentAnswerAndGrading {
     private String comments;
     private String answerStatus;
 
+    private String content;
+    private String aicomment;
+
     public void setContent(String content) {
         this.content = content;
     }
@@ -30,8 +33,6 @@ public class StudentAnswerAndGrading {
         return aicomment;
     }
 
-    private String content;
-    private String aicomment;
 
     // Getters and Setters
     public int getAnswerId() {

@@ -1,7 +1,7 @@
 package cn.edu.zjut.service;
 
 import cn.edu.zjut.controller.QuestionBankController;
-import cn.edu.zjut.entity.PaperQuestionDTO;
+import cn.edu.zjut.DTO.PaperQuestionDTO;
 import cn.edu.zjut.entity.Papers;
 import cn.edu.zjut.entity.Questions;
 import org.springframework.web.multipart.MultipartFile;

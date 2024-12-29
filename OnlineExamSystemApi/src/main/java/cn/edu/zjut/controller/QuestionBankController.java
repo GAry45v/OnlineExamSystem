@@ -1,7 +1,7 @@
 package cn.edu.zjut.controller;
 
 import cn.edu.zjut.config.JwtAuthenticationToken;
-import cn.edu.zjut.entity.QuestionWithFilesDTO;
+import cn.edu.zjut.DTO.QuestionWithFilesDTO;
 import cn.edu.zjut.entity.QuestionBank;
 import cn.edu.zjut.entity.Questions;
 import cn.edu.zjut.service.QuestionBankService;

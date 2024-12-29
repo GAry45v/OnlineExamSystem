@@ -2,7 +2,7 @@ package cn.edu.zjut.serviceimpl;
 
 import cn.edu.zjut.entity.Student;
 import cn.edu.zjut.entity.StudentTeachingClass;
-import cn.edu.zjut.entity.StudentTeachingClassDTO;
+import cn.edu.zjut.DTO.StudentTeachingClassDTO;
 import cn.edu.zjut.mapper.StudentTeachingClassMapper;
 import cn.edu.zjut.service.StudentService;
 import cn.edu.zjut.service.StudentTeachingClassService;

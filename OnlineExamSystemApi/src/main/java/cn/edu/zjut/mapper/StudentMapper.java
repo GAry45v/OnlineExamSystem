@@ -1,7 +1,7 @@
 package cn.edu.zjut.mapper;
 
 import cn.edu.zjut.entity.Student;
-import cn.edu.zjut.entity.StudentDTO;
+import cn.edu.zjut.DTO.StudentDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;

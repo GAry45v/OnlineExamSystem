@@ -1,4 +1,6 @@
-package cn.edu.zjut.entity;
+package cn.edu.zjut.DTO;
+
+import cn.edu.zjut.entity.Questions;
 
 public class PaperQuestionDTO {
     private int paperQuestionId;

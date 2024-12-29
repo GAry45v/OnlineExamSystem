@@ -1,4 +1,4 @@
-package cn.edu.zjut.entity;
+package cn.edu.zjut.DTO;
 
 import java.util.Map;
 

@@ -1,4 +1,4 @@
-package cn.edu.zjut.entity;
+package cn.edu.zjut.DTO;
 
 import cn.edu.zjut.entity.Questions;
 import org.springframework.web.multipart.MultipartFile;
