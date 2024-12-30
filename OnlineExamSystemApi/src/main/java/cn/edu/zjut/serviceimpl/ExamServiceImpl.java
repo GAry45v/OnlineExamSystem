@@ -7,7 +7,10 @@ import cn.edu.zjut.DTO.TeacherMarkDTO;
 import cn.edu.zjut.entity.*;
 import cn.edu.zjut.mapper.*;
 import cn.edu.zjut.service.ExamService;
+import cn.edu.zjut.service.OperationLogService;
 import cn.edu.zjut.service.QuestionBankService;
+import cn.edu.zjut.util.OperationLogUtil;
+import dev.langchain4j.community.model.qianfan.QianfanChatModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,9 +38,14 @@ public class ExamServiceImpl implements ExamService {
     private TeacherMapper teacherMapper; // 注入 TeacherMapper
     @Autowired
     private StudentExamMapper studentExamMapper;
+    @Autowired
+    private OperationLogService operationLogService;
     @Override
     public void createExam(Exam exam) {
+
         examMapper.createExam(exam);
+        OperationLog log = OperationLogUtil.createOperationLog("创建考试:"+exam.getExamName());
+        operationLogService.addOperationLog(log);
     }
     @Override
     public List<ExamDTO> findExamsByTeacher(String employeeNumber) {
@@ -85,11 +93,14 @@ public class ExamServiceImpl implements ExamService {
     @Override
     public void deleteExam(int examId) {
         examMapper.deleteExam(examId);
+        OperationLog log = OperationLogUtil.createOperationLog("删除考试ID:"+examId);
+        operationLogService.addOperationLog(log);
     }
 
     @Override
     public void publishExamToStudent(StudentExam studentExam) {
         studentExamMapper.insertStudentExam(studentExam);
+
     }
 
     @Override
@@ -159,6 +170,8 @@ public class ExamServiceImpl implements ExamService {
             totalScore = totalScore.add(markDTO.getTeachermark());
         }
         studentExamMapper.updateExamStatusAndScore(studentExamId, "已批阅", totalScore);
+        OperationLog log = OperationLogUtil.createOperationLog("教师批卷，考试Id"+studentExamId);
+        operationLogService.addOperationLog(log);
     }
 
     @Override

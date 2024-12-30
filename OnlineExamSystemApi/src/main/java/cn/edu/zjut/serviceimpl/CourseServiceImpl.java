@@ -1,11 +1,17 @@
 package cn.edu.zjut.serviceimpl;
 
+import cn.edu.zjut.config.JwtAuthenticationToken;
 import cn.edu.zjut.entity.Course;
+import cn.edu.zjut.entity.OperationLog;
 import cn.edu.zjut.entity.TeacherCourse;
+import cn.edu.zjut.entity.User;
 import cn.edu.zjut.mapper.CourseMapper;
 import cn.edu.zjut.mapper.TeachingClassMapper;
 import cn.edu.zjut.service.CourseService;
+import cn.edu.zjut.service.OperationLogService;
+import cn.edu.zjut.util.OperationLogUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,9 +23,15 @@ public class CourseServiceImpl implements CourseService {
     private CourseMapper courseMapper;
     @Autowired
     private TeachingClassMapper teachingClassMapper;
+    @Autowired
+    private OperationLogService operationLogService;
+
 
     @Override
     public void createCourse(Course course, String employeeNumber) {
+        OperationLog log = OperationLogUtil.createOperationLog("创建课程"+course.getCourseName());
+        operationLogService.addOperationLog(log);
+
         // 验证创建人身份
         course.setCreatedByEmployeeNumber(employeeNumber);
 
@@ -35,7 +47,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void deleteCourse(Integer courseId, String employeeNumber) {
-        System.out.println(employeeNumber);
+
         // 验证课程创建人
         List<Course> courses = courseMapper.findCoursesByEmployeeNumber(employeeNumber);
         boolean isCreator = courses.stream()
@@ -43,7 +55,8 @@ public class CourseServiceImpl implements CourseService {
         if (!isCreator) {
             throw new IllegalArgumentException("当前用户无权删除课程，课程ID：" + courseId);
         }
-
+        OperationLog log = OperationLogUtil.createOperationLog("删除课程"+courseId);
+        operationLogService.addOperationLog(log);
         // 删除课程并级联删除关联记录
         courseMapper.deleteFromTeacherCourse(courseId);
         courseMapper.deleteFromCourse(courseId);

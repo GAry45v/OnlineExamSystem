@@ -1,10 +1,13 @@
 package cn.edu.zjut.serviceimpl;
 
+import cn.edu.zjut.entity.OperationLog;
 import cn.edu.zjut.entity.Teacher;
 import cn.edu.zjut.entity.TeachingClass;
 import cn.edu.zjut.entity.TeacherTeachingClass;
 import cn.edu.zjut.mapper.TeachingClassMapper;
+import cn.edu.zjut.service.OperationLogService;
 import cn.edu.zjut.service.TeachingClassService;
+import cn.edu.zjut.util.OperationLogUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +19,8 @@ public class TeachingClassServiceImpl implements TeachingClassService {
 
     @Autowired
     private TeachingClassMapper teachingClassMapper;
-
+    @Autowired
+    private OperationLogService operationLogService;
     @Override
     public boolean isMainLecturer(String employeeNumber, Integer teachingClassId) {
         int count = teachingClassMapper.countMainLecturer(employeeNumber, teachingClassId);
@@ -34,6 +38,8 @@ public class TeachingClassServiceImpl implements TeachingClassService {
         teacherTeachingClass.setTeachingClassId(teachingClass.getTeachingClassId());
         teacherTeachingClass.setRole(role);
         teachingClassMapper.createTeacherTeachingClass(teacherTeachingClass);
+        OperationLog log = OperationLogUtil.createOperationLog("教师创建教学班"+teachingClass.getClassName());
+        operationLogService.addOperationLog(log);
     }
 
     @Override
@@ -43,6 +49,8 @@ public class TeachingClassServiceImpl implements TeachingClassService {
 
         // 删除教学班
         teachingClassMapper.deleteTeachingClass(teachingClassId);
+        OperationLog log = OperationLogUtil.createOperationLog("教师创建教学班:"+teachingClassId);
+        operationLogService.addOperationLog(log);
     }
 
     @Override

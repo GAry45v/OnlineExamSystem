@@ -1,11 +1,14 @@
 package cn.edu.zjut.serviceimpl;
 
+import cn.edu.zjut.entity.OperationLog;
 import cn.edu.zjut.entity.Student;
 import cn.edu.zjut.entity.StudentTeachingClass;
 import cn.edu.zjut.DTO.StudentTeachingClassDTO;
 import cn.edu.zjut.mapper.StudentTeachingClassMapper;
+import cn.edu.zjut.service.OperationLogService;
 import cn.edu.zjut.service.StudentService;
 import cn.edu.zjut.service.StudentTeachingClassService;
+import cn.edu.zjut.util.OperationLogUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,8 @@ public class StudentTeachingClassServiceImpl implements StudentTeachingClassServ
     private StudentService studentService;
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
+    @Autowired
+    private OperationLogService operationLogService;
     @Override
     public void addStudentToTeachingClass(StudentTeachingClass studentTeachingClass) {
         // 确保入班日期非空
@@ -39,6 +44,8 @@ public class StudentTeachingClassServiceImpl implements StudentTeachingClassServ
         );
         String redisKey = "teachingClass:students:" + studentTeachingClass.getTeachingClassId();
         redisTemplate.delete(redisKey);
+        OperationLog log = OperationLogUtil.createOperationLog("教师添加学生，学生:"+studentTeachingClass.getStudentNumber()+"教学班:"+studentTeachingClass.getTeachingClassId());
+        operationLogService.addOperationLog(log);
     }
 
     @Override
@@ -59,6 +66,8 @@ public class StudentTeachingClassServiceImpl implements StudentTeachingClassServ
                 studentTeachingClasses.get(0).getTeachingClassId(),
                 currentTimestamp
         );
+        OperationLog log = OperationLogUtil.createOperationLog("教师批量导入学生到教学班");
+        operationLogService.addOperationLog(log);
         String redisKey = "teachingClass:students:" + studentTeachingClasses.get(0).getTeachingClassId();
         redisTemplate.delete(redisKey);
     }
@@ -90,6 +99,10 @@ public class StudentTeachingClassServiceImpl implements StudentTeachingClassServ
     public void deleteStudentFromTeachingClass(String studentNumber, Integer teachingClassId) {
         // 删除单个学生
         studentTeachingClassMapper.deleteStudentFromTeachingClass(studentNumber, teachingClassId);
+
+        OperationLog log = OperationLogUtil.createOperationLog("教师从教学班:"+teachingClassId+"移除学生:"+studentNumber);
+        operationLogService.addOperationLog(log);
+
         String redisKey = "teachingClass:students:" + teachingClassId;
         redisTemplate.delete(redisKey);
     }

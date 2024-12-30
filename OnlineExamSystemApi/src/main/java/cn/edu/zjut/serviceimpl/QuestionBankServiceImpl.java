@@ -1,11 +1,14 @@
 package cn.edu.zjut.serviceimpl;
 
 import cn.edu.zjut.controller.QuestionBankController;
+import cn.edu.zjut.entity.OperationLog;
 import cn.edu.zjut.entity.QuestionBank;
 import cn.edu.zjut.entity.Questions;
 import cn.edu.zjut.repository.QuestionBankRepository;
+import cn.edu.zjut.service.OperationLogService;
 import cn.edu.zjut.service.QuestionBankService;
 import cn.edu.zjut.util.AliOSSUtils;
+import cn.edu.zjut.util.OperationLogUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,7 +29,8 @@ public class QuestionBankServiceImpl implements QuestionBankService {
 
     @Autowired
     private AliOSSUtils aliOSSUtils;
-
+    @Autowired
+    private OperationLogService operationLogService;
     @Override
     public void createQuestionBank(QuestionBank questionBank) {
         if (questionBank == null || questionBank.getName() == null || questionBank.getEmployeeNumber() == null) {
@@ -34,6 +38,8 @@ public class QuestionBankServiceImpl implements QuestionBankService {
         }
         questionBank.setQuestionBankId(UUID.randomUUID().toString());
         questionBankRepository.save(questionBank);
+        OperationLog log = OperationLogUtil.createOperationLog("教师创建题库："+questionBank.getName());
+        operationLogService.addOperationLog(log);
     }
 
 //    @Override
@@ -218,6 +224,8 @@ private static final Logger logger = LoggerFactory.getLogger(QuestionBankService
                 .orElseThrow(() -> new RuntimeException("题库不存在"));
 
         questionBankRepository.delete(questionBank);
+        OperationLog log = OperationLogUtil.createOperationLog("教师删除题库："+questionBank.getName());
+        operationLogService.addOperationLog(log);
     }
 
     @Override

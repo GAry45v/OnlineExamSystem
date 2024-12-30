@@ -2,13 +2,16 @@ package cn.edu.zjut.serviceimpl;
 
 import cn.edu.zjut.controller.QuestionBankController;
 import cn.edu.zjut.DTO.PaperQuestionDTO;
+import cn.edu.zjut.entity.OperationLog;
 import cn.edu.zjut.entity.Papers;
 import cn.edu.zjut.entity.PaperQuestions;
 import cn.edu.zjut.entity.Questions;
 import cn.edu.zjut.mapper.PapersMapper;
 import cn.edu.zjut.mapper.PaperQuestionsMapper;
+import cn.edu.zjut.service.OperationLogService;
 import cn.edu.zjut.service.PaperService;
 import cn.edu.zjut.service.QuestionBankService;
+import cn.edu.zjut.util.OperationLogUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,10 +28,14 @@ public class PaperServiceImpl implements PaperService {
 
     @Autowired
     private QuestionBankService questionBankService;
+    @Autowired
+    private OperationLogService operationLogService;
 
     @Override
     public void createPaper(Papers paper) {
         papersMapper.createPaper(paper);
+        OperationLog log = OperationLogUtil.createOperationLog("教师创建试卷："+paper.getName());
+        operationLogService.addOperationLog(log);
     }
 
     @Override
@@ -90,8 +97,10 @@ public class PaperServiceImpl implements PaperService {
                 throw new RuntimeException("出卷失败！试卷平均难度不符合要求，请调整参数。");
             }
         }
-
+        OperationLog log = OperationLogUtil.createOperationLog("教师使用智能组卷，试卷Id"+paperId);
+        operationLogService.addOperationLog(log);
         return papersMapper.findPaperById(paperId);
+
     }
 
     @Override
