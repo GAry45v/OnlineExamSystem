@@ -5,6 +5,7 @@ import cn.edu.zjut.entity.QuestionBank;
 import cn.edu.zjut.entity.Questions;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface QuestionBankService {
@@ -28,5 +29,6 @@ public interface QuestionBankService {
     Questions findQuestionByBankIdAndQuestionId(String questionBankId, String questionId);
 
     //更新题库中题目的信息
-    void updateQuestionInBank(String questionBankId, Questions updatedQuestion);
+//    void updateQuestionInBank(String questionBankId, Questions updatedQuestion);
+    void updateQuestionInBank(String questionBankId, Questions updatedQuestion, List<MultipartFile> files, List<QuestionBankController.FileMetadata> fileMetadataList) throws IOException;
 }
