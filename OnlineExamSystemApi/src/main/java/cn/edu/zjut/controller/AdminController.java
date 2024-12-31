@@ -3,6 +3,7 @@ package cn.edu.zjut.controller;
 import cn.edu.zjut.entity.*;
 import cn.edu.zjut.entity.Class;
 import cn.edu.zjut.service.AdminService;
+import cn.edu.zjut.service.OperationLogService;
 import cn.edu.zjut.vo.ResponseResult;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -22,13 +23,22 @@ public class AdminController {
 
     @Autowired
     private AdminService adminService;
+    @Autowired
+    private OperationLogService operationLogService;
 
+
+    @GetMapping("/get_log")
+    public List<OperationLog> getAllLogs() {
+
+        return operationLogService.getAllOperationLogs();
+    }
     /**
      * 批量添加教师信息（通过 Excel 文件上传）
      *
      * @param file Excel 文件
      * @return 封装的响应结果
      */
+
     @PostMapping("/teacher/batchAdd")
     public ResponseResult<?> batchAddTeachers(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
