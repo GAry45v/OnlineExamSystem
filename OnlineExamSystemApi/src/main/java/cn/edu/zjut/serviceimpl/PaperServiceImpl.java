@@ -216,4 +216,10 @@ public class PaperServiceImpl implements PaperService {
 
         return result;
     }
+
+    public boolean deletePaperById(int paperId) {
+        int rowsAffected = papersMapper.deletePaperById(paperId);
+        return rowsAffected > 0;
+    }
+
 }

@@ -6,6 +6,7 @@ import cn.edu.zjut.config.JwtAuthenticationToken;
 import cn.edu.zjut.entity.*;
 import cn.edu.zjut.service.PaperService;
 import cn.edu.zjut.service.QuestionBankService;
+import cn.edu.zjut.vo.ResponseResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -166,4 +167,15 @@ public class PapersController {
     public List<PaperQuestionDTO> getQuestionsWithDetails(@PathVariable int paperId) {
         return paperService.getQuestionsWithDetailsByPaperId(paperId);
     }
+
+    @DeleteMapping("/deletePaper/{paperId}")
+    public ResponseResult<String> deletePaper(@PathVariable int paperId) {
+        boolean isDeleted = paperService.deletePaperById(paperId);
+        if (isDeleted) {
+            return ResponseResult.success("Paper deleted successfully.");
+        } else {
+            return ResponseResult.error("Paper not found.");
+        }
+    }
+
 }

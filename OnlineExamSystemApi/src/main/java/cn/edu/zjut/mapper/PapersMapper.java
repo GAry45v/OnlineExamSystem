@@ -24,4 +24,7 @@ public interface PapersMapper {
     // 返回某个老师的所有试卷
     @Select("SELECT * FROM Papers WHERE employeeNumber = #{employeeNumber}")
     List<Papers> findPapersByEmployee(@Param("employeeNumber") String employeeNumber);
+
+    @Delete("DELETE FROM Papers WHERE paperId = #{paperId}")
+    int deletePaperById(@Param("paperId") int paperId);
 }

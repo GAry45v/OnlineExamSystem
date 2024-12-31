@@ -28,4 +28,5 @@ public interface PaperService {
 
     List<PaperQuestionDTO> getQuestionsWithDetailsByPaperId(int paperId);
 
+    boolean deletePaperById(int paperId);
 }
