@@ -269,8 +269,29 @@ private static final Logger logger = LoggerFactory.getLogger(QuestionBankService
                 .orElseThrow(() -> new RuntimeException("题目不存在，ID: " + questionId));
     }
 
+//    @Override
+//    public void updateQuestionInBank(String questionBankId, Questions updatedQuestion) {
+//        QuestionBank questionBank = questionBankRepository.findById(questionBankId)
+//                .orElseThrow(() -> new RuntimeException("题库不存在，ID: " + questionBankId));
+//
+//        Questions existingQuestion = questionBank.getQuestions().stream()
+//                .filter(q -> q.getQuestionId().equals(updatedQuestion.getQuestionId()))
+//                .findFirst()
+//                .orElseThrow(() -> new RuntimeException("题目不存在，ID: " + updatedQuestion.getQuestionId()));
+//
+//        // 更新题目信息，只更新非空字段
+//        Optional.ofNullable(updatedQuestion.getContent()).ifPresent(existingQuestion::setContent);
+//        Optional.ofNullable(updatedQuestion.getOptions()).ifPresent(existingQuestion::setOptions);
+//        Optional.ofNullable(updatedQuestion.getAnswers()).ifPresent(existingQuestion::setAnswers);
+//        Optional.ofNullable(updatedQuestion.getDifficulty()).ifPresent(existingQuestion::setDifficulty);
+//        Optional.ofNullable(updatedQuestion.getTags()).ifPresent(existingQuestion::setTags);
+//        Optional.ofNullable(updatedQuestion.getType()).ifPresent(existingQuestion::setType);
+//        Optional.ofNullable(updatedQuestion.getResourcePaths()).ifPresent(existingQuestion::setResourcePaths);
+//
+//        questionBankRepository.save(questionBank);
+//    }
     @Override
-    public void updateQuestionInBank(String questionBankId, Questions updatedQuestion) {
+    public void updateQuestionInBank(String questionBankId, Questions updatedQuestion, List<MultipartFile> files, List<QuestionBankController.FileMetadata> fileMetadataList) throws IOException {
         QuestionBank questionBank = questionBankRepository.findById(questionBankId)
                 .orElseThrow(() -> new RuntimeException("题库不存在，ID: " + questionBankId));
 
@@ -278,6 +299,33 @@ private static final Logger logger = LoggerFactory.getLogger(QuestionBankService
                 .filter(q -> q.getQuestionId().equals(updatedQuestion.getQuestionId()))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("题目不存在，ID: " + updatedQuestion.getQuestionId()));
+
+        // 初始化资源路径列表
+        if (existingQuestion.getResourcePaths() == null) {
+            existingQuestion.setResourcePaths(new ArrayList<>());
+        }
+
+        // 遍历文件元数据并处理每个文件
+        for (QuestionBankController.FileMetadata metadata : fileMetadataList) {
+            MultipartFile file = files.stream()
+                    .filter(f -> f.getOriginalFilename().equals(metadata.getFileName()))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("文件 " + metadata.getFileName() + " 不存在"));
+
+            String resourcePath = aliOSSUtils.upload(file);
+            existingQuestion.getResourcePaths().add(resourcePath);
+
+            // 根据用途绑定路径
+            if ("content".equals(metadata.getType())) {
+                existingQuestion.setContent(existingQuestion.getContent() + " [图片: " + resourcePath + "]");
+            } else if ("options".equals(metadata.getType()) && metadata.getOptionKey() != null) {
+                String optionContent = existingQuestion.getOptions().get(metadata.getOptionKey());
+                if (optionContent == null) {
+                    throw new RuntimeException("选项 " + metadata.getOptionKey() + " 不存在");
+                }
+                existingQuestion.getOptions().put(metadata.getOptionKey(), optionContent + " [图片: " + resourcePath + "]");
+            }
+        }
 
         // 更新题目信息，只更新非空字段
         Optional.ofNullable(updatedQuestion.getContent()).ifPresent(existingQuestion::setContent);
@@ -290,4 +338,5 @@ private static final Logger logger = LoggerFactory.getLogger(QuestionBankService
 
         questionBankRepository.save(questionBank);
     }
+
 }

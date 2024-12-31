@@ -180,14 +180,30 @@ public class QuestionBankController {
         }
     }
 
+//    @PutMapping("/{questionBankId}/questions")
+//    public ResponseEntity<String> updateQuestionInBank(
+//            @PathVariable String questionBankId,
+//            @RequestBody Questions updatedQuestion) {
+//        try {
+//            questionBankService.updateQuestionInBank(questionBankId, updatedQuestion);
+//            return ResponseEntity.ok("题目更新成功");
+//        } catch (RuntimeException e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("题目更新失败: " + e.getMessage());
+//        }
+//    }
     @PutMapping("/{questionBankId}/questions")
     public ResponseEntity<String> updateQuestionInBank(
             @PathVariable String questionBankId,
-            @RequestBody Questions updatedQuestion) {
+            @RequestPart("question") Questions updatedQuestion,
+            @RequestPart("files") List<MultipartFile> files,
+            @RequestPart("fileMetadata") String fileMetadataJson) {
         try {
-            questionBankService.updateQuestionInBank(questionBankId, updatedQuestion);
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<FileMetadata> fileMetadataList = objectMapper.readValue(fileMetadataJson, new TypeReference<>() {});
+
+            questionBankService.updateQuestionInBank(questionBankId, updatedQuestion, files, fileMetadataList);
             return ResponseEntity.ok("题目更新成功");
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("题目更新失败: " + e.getMessage());
         }
     }
